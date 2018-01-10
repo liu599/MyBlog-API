@@ -9,9 +9,13 @@ Code for my blog server
 
 ## Storage
 
+Currently I use mysql database.
+
+Plan to use no-sql database for comments.
+
 Still working on for the whole functionality.
 
-Currently only finish the post and user
+Currently only finish the post and user modules.
 
 ![Storage](./concept/concept_20171113.png)
 
@@ -21,8 +25,7 @@ Currently only finish the post and user
 
 ## Build Log
 
-- create a `my-config.go` file under `src` folder
-- note that `NEKOHAND_DATABASE_ADDR` is not effective, by default using **12450** port for API
+- create a `my-config.go` file under `src` folder, note that `NEKOHAND_DATABASE_ADDR` is not effective, by default using **12450** port for API
 
 ```go
     package main
@@ -38,9 +41,7 @@ Currently only finish the post and user
     }
 ```
 - Dependencies
-
 run `go get` for the below packages.
-
     - github.com/gorilla/mux
     - github.com/dgrijalva/jwt-go
     - github.com/rs/cors
@@ -51,3 +52,6 @@ run `go get` for the below packages.
 
 run `go build .` and `./src` to start.
 
+- License
+
+GPL v3.0
