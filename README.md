@@ -41,18 +41,18 @@ Currently only finish the post and user modules.
     	os.Setenv("NEKOHAND_AUTHORIZATION", "authcode")
     }
 ```
+- run `go build .` and `./src` to start.
+
 ## Dependencies
+
 run `go get` for the below packages.
-    - github.com/gorilla/mux
-    - github.com/dgrijalva/jwt-go
-    - github.com/rs/cors
-    - github.com/codegangsta/negroni
-    - gopkg.in/russross/blackfriday.v2
+
+- github.com/gorilla/mux
+- github.com/dgrijalva/jwt-go
+- github.com/rs/cors
+- github.com/codegangsta/negroni
+- gopkg.in/russross/blackfriday.v2
     
-## Build
-
-run `go build .` and `./src` to start.
-
 ## License
 
 GPL v3.0
