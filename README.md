@@ -6,6 +6,7 @@ Code for my blog server
 ## Technical Stacks
 
 - Go
+- MySQL
 
 ## Storage
 
@@ -23,7 +24,7 @@ Currently only finish the post and user modules.
 
 0.0.1 (2017.12.25)
 
-## Build Log
+## Build
 
 - create a `my-config.go` file under `src` folder, note that `NEKOHAND_DATABASE_ADDR` is not effective, by default using **12450** port for API
 
@@ -40,7 +41,7 @@ Currently only finish the post and user modules.
     	os.Setenv("NEKOHAND_AUTHORIZATION", "authcode")
     }
 ```
-- Dependencies
+## Dependencies
 run `go get` for the below packages.
     - github.com/gorilla/mux
     - github.com/dgrijalva/jwt-go
@@ -48,10 +49,10 @@ run `go get` for the below packages.
     - github.com/codegangsta/negroni
     - gopkg.in/russross/blackfriday.v2
     
-- Build
+## Build
 
 run `go build .` and `./src` to start.
 
-- License
+## License
 
 GPL v3.0
