@@ -11,6 +11,8 @@ import (
 
 func main() {
 
+	//Configure()
+
 	engine := gin.New()
 
 	engine.Use(gin.Logger())
