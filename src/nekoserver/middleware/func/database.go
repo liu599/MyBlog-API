@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"nekoserver/middleware/data"
+	"v3/common"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -64,3 +65,21 @@ func unsetDB(name string) {
 		}
 	}
 }
+
+// GetDBconnection
+
+func MySqlGetDB(connection string) (*sqlx.DB, error) {
+	var err error
+	conn, exists := AppDatabase[connection]
+	if !exists || conn.DB.(*sqlx.DB).Ping() != nil {
+		AssignDatabaseFromList([]string{"nekohand"})
+		conn, exists = AppDatabase[connection]
+		if !exists {
+			err = fmt.Errorf(common.MSG_DATABASE_CONNECTION_NOT_EXISTS)
+			return nil, err
+		}
+	}
+	// return sqlx.NewDb(conn.DB.(*sqlx.DB), conn.Driver), err
+	return conn.DB.(*sqlx.DB), err
+}
+
