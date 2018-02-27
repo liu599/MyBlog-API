@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"nekoserver/middleware/func"
 	"nekoserver/router"
@@ -18,7 +19,7 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-
+	"gopkg.in/mgo.v2/bson"
 )
 
 
@@ -119,4 +120,18 @@ func TestEmptyTable(t *testing.T) {
 	//if body := fmt.Sprintf("%v", r.Data); body != "[]" {
 	//	t.Errorf("Expected an empty array. Got %s", body)
 	//}
+}
+
+var NewName = "Test"
+var NewDate = time.Now().Unix()
+
+func insertOneData(id string, db *sqlx.DB) {
+	//fmt.Println(id, "Inserted")
+	statement := fmt.Sprintf("INSERT INTO user (id, name, password, mail, createAt, loggedAt) VALUES('%s', '%s', '%s', '%s', '%d', '%d')",
+		id, NewName, bson.NewObjectId().Hex(), "1234567890@qq.com", NewDate, NewDate)
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		fmt.Println("Database error")
+	}
 }
