@@ -15,7 +15,7 @@ import (
 	"nekoserver/middleware/func"
 	"nekoserver/router"
 
-	"github.com/gin-gonic/gin"
+	gin "github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/mgo.v2/bson"
@@ -31,6 +31,9 @@ func ensureTableExists(db *sqlx.DB) {
 		log.Fatal(err)
 	}
 	if _, err := db.Exec(categoryTableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+	if _, err := db.Exec(commentTableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -91,7 +94,8 @@ CREATE TABLE IF NOT EXISTS post
 (
     pid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id         VARCHAR(50) UNIQUE NOT NULL,
-	author	   VARCHAR(50) UNIQUE NOT NULL,
+	author	   VARCHAR(50) NOT NULL,
+	category   VARCHAR(50) NOT NULL,
 	body	   TEXT(1000) NOT NULL,
 	ptitle     VARCHAR(32)  NOT NULL,
 	slug       VARCHAR(32)  NOT NULL,
@@ -107,6 +111,22 @@ CREATE TABLE IF NOT EXISTS category
     id         VARCHAR(50) UNIQUE NOT NULL,
 	cname	   VARCHAR(50) UNIQUE NOT NULL,
 	cinfo     VARCHAR(32) NULL
+) character set = utf8`
+
+const commentTableCreationQuery = `
+CREATE TABLE IF NOT EXISTS comment
+(
+    coid       INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         VARCHAR(50) UNIQUE NOT NULL,
+    pid        VARCHAR(50) NOT NULL,
+	author	   VARCHAR(50) NOT NULL,
+	mail	   VARCHAR(50) NOT NULL,
+	url	       VARCHAR(200) NOT NULL,
+	ip         VARCHAR(80) NOT NULL,
+	prid       VARCHAR(50) NOT NULL,
+	body	   TEXT(1000) NOT NULL,
+	createdAt  INT(64)  NOT NULL,
+	modifiedAt INT(64) NOT NULL
 ) character set = utf8`
 
 // 发送请求
@@ -130,7 +150,7 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 }
 
 func TestEmptyTable(t *testing.T) {
-	clearTable(db)
+	// clearTable(db)
 	form := url.Values{}
 	form.Add("token", "0003020")
 	req, _ := http.NewRequest("GET", "/v2/backend/status", strings.NewReader(form.Encode()))

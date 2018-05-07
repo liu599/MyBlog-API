@@ -16,12 +16,13 @@ type (
 	}
 	Post struct {
 		PID      int      `json:"pid"`
+		Id       string   `json:"id"`
 		PTitle   string   `json:"title"`
 		Slug     string   `json:"slug"`
-		Category int      `json:"category"`
+		Category string   `json:"category"`
 		Template int      `json:"template"`
 		Status   string   `json:"status"`
-		Author   int      `json:"author"`
+		Author   string   `json:"author"`
 		Body     string   `json:"body"`
 		Password string   `json:"password"`
 		CreatedAt  int64  `json:"createdAt"`
@@ -34,13 +35,15 @@ type (
 	}
 	Comment struct {
 		COID    int `json:"coid"`
-		PID     int `json:"pid"`
-		Created int64 `json:"created"`
+		Id      string `json:"id"`
+		PID     string `json:"pid"`
+		Prid  string `json:"prid"` // Parent ID
+		CreatedAt int64 `json:"created"`
+		ModifiedAt int64  `json:"modifiedAt"`
 		Author  string `json:"author"`
 		Url     string `json:"url"`
 		Ip      string `json:"ip"`
 		Body    string `json:"body"`
-		Parent  int `json:"parent"`
 		Status  string `json:"status"`
 		Mail    string `json:"mail"`
 	}

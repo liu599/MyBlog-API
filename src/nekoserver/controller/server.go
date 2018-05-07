@@ -15,10 +15,10 @@ func ServerStatusGet(context *gin.Context) {
 	m := data.Post{}
 	pg := data.Pager{}
 
-	m.Author = 101
+	m.Author = "eddie32"
 	m.PTitle = "Post Title"
 	m.Body = "exc"
-	m.Category = 301
+	m.Category = "adjfkasjflkajkdla"
 
 	pg.PageSize = 15
 	pg.PageNum = 1

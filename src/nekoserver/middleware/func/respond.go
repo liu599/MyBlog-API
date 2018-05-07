@@ -33,13 +33,13 @@ func Respond(context *gin.Context, code int, data ...map[string]interface{}) {
 
 func RespondError(context *gin.Context, code int, err data.Error) {
 
-	data := gin.H{}
+	emptyData := gin.H{}
 
-	data["success"] = false
-	data["error"] = err
-	data["code"] = 1
+	emptyData["success"] = false
+	emptyData["error"] = err
+	emptyData["code"] = 1
 
-	Response(context, code, data)
+	Response(context, code, emptyData)
 
 	context.Abort()
 }
