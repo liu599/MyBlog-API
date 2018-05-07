@@ -15,17 +15,17 @@ type (
 		Fields  map[string]interface{} `json:"fields,omitempty"`  // 错误字段信息
 	}
 	Post struct {
-		PID      int    `json:"pid"`
-		PTitle   string `json:"title"`
-		Slug     string `json:"slug"`
-		Category int    `json:"category"`
-		Template int    `json:"template"`
-		Status   string `json:"status"`
-		Author   int    `json:"author"`
-		Body     string `json:"body"`
-		Password string `json:"password"`
-		Created  int64  `json:"created"`
-		Modified int64  `json:"modified"`
+		PID      int      `json:"pid"`
+		PTitle   string   `json:"title"`
+		Slug     string   `json:"slug"`
+		Category int      `json:"category"`
+		Template int      `json:"template"`
+		Status   string   `json:"status"`
+		Author   int      `json:"author"`
+		Body     string   `json:"body"`
+		Password string   `json:"password"`
+		CreatedAt  int64  `json:"createdAt"`
+		ModifiedAt int64  `json:"modifiedAt"`
 	}
 	Pager struct {
 		PageNum         int `json:"pageNum"`
@@ -46,6 +46,7 @@ type (
 	}
 	Category struct {
 		CID   int `json:"cid"`
+		Id    string `json:"id"`
 		CName string `json:"cname"`
 		CInfo string `json:"cinfo"`
 	}
@@ -62,7 +63,7 @@ type (
 		Name     string `json:"name"`
 		Password string `json:"password"`
 		Mail     string `json:"mail"`
-		Created  int64  `json:"created"`
-		Logged   int64  `json:"logged"`
+		CreatedAt  int64  `json:"createdAt"`
+		LoggedAt   int64  `json:"loggedAt"`
 	}
 )

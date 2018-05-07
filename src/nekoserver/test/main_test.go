@@ -55,12 +55,11 @@ func TestMain(m *testing.M) {
 
 	_func.AssignDatabaseFromList([]string{"nekohand"})
 
-	dbc, err := _func.MySqlGetDB("nekohand")
+	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
 		fmt.Println("Error Database Connection")
 		return
 	}
-	db = dbc
 	ensureTableExists(db)
 	//ensureCategoryTableExists(db)
 	//ensureRelationshipTableExists(db)
@@ -93,10 +92,9 @@ CREATE TABLE IF NOT EXISTS post
     pid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id         VARCHAR(50) UNIQUE NOT NULL,
 	author	   VARCHAR(50) UNIQUE NOT NULL,
-	body	   TEXT UNIQUE NOT NULL,
+	body	   TEXT(1000) NOT NULL,
 	ptitle     VARCHAR(32)  NOT NULL,
 	slug       VARCHAR(32)  NOT NULL,
-	mail       VARCHAR(50)  NOT NULL,
 	password   VARCHAR(32)  NOT NULL,
 	createdAt  INT(64)  NOT NULL,
 	modifiedAt   INT(64) NOT NULL
@@ -108,7 +106,7 @@ CREATE TABLE IF NOT EXISTS category
     cid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id         VARCHAR(50) UNIQUE NOT NULL,
 	cname	   VARCHAR(50) UNIQUE NOT NULL,
-	cinfo     VARCHAR(32) NULL,
+	cinfo     VARCHAR(32) NULL
 ) character set = utf8`
 
 // 发送请求
