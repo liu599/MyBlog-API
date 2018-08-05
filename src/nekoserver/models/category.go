@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 
 	"nekoserver/middleware/data"
@@ -61,8 +62,14 @@ func FetchCategoryList() (error, []data.Category) {
 	}
 	for rows.Next() {
 		var cat data.Category
-		if err := rows.Scan(&cat.CID, &cat.Id, &cat.CName, &cat.CInfo); err != nil {
+		var nulString sql.NullString
+		if err := rows.Scan(&cat.CID, &cat.Id, &cat.CName, &nulString); err != nil {
 			return err, []data.Category{}
+		}
+		if nulString.Valid {
+			cat.CInfo = ""
+		} else {
+			cat.CInfo = nulString.String
 		}
 		categoryList = append(categoryList, cat)
 	}

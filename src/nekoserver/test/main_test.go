@@ -21,7 +21,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-
+var db *sqlx.DB
 
 func ensureTableExists(db *sqlx.DB) {
 	if _, err := db.Exec(userTableCreationQuery); err != nil {
@@ -37,8 +37,6 @@ func ensureTableExists(db *sqlx.DB) {
 		log.Fatal(err)
 	}
 }
-
-var db *sqlx.DB
 
 func TestMain(m *testing.M) {
 
@@ -181,4 +179,22 @@ func insertOneData(id string, db *sqlx.DB) {
 	if err != nil {
 		fmt.Println("Database error")
 	}
+}
+
+func insertCategories(db *sqlx.DB) {
+	statement := fmt.Sprintf("INSERT INTO category (id, cname, cinfo) VALUES('%s', '%s', '%s')", bson.NewObjectId().Hex(), "plsss", "1231232")
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		fmt.Println("Database error")
+	}
+}
+
+func TestFetchCategories(t *testing.T) {
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertCategories(db)
+	fmt.Println("123456")
+	req, _ := http.NewRequest("GET", "/v2/backend/categories", nil)
+	response := executeRequest(req)
+	fmt.Println(response.Body)
 }
