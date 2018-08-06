@@ -18,8 +18,6 @@ func CategoriesFetch(context *gin.Context) {
 
 	mk["data"] = cats
 
-
-
 	if err != nil {
 		fmt.Println(err)
 		_func.Respond(context, http.StatusBadRequest, nil)

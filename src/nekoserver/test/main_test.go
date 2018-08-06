@@ -190,11 +190,33 @@ func insertCategories(db *sqlx.DB) {
 	}
 }
 
+func insertPost(db *sqlx.DB) {
+	statement := fmt.Sprintf("INSERT INTO post (id, author, category, body, ptitle, slug, password, createdAt, modifiedAt) VALUES('%s', '%s', '%s','%s', '%s', '%s','%s', '%d', '%d')", bson.NewObjectId().Hex(), "eddie32", bson.NewObjectId().Hex(), "This is post 2 ", "On", "Second", "ADFSADF", time.Now().Unix(), time.Now().Unix())
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		fmt.Println("Database error")
+	}
+}
+
 func TestFetchCategories(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertCategories(db)
 	fmt.Println("123456")
 	req, _ := http.NewRequest("GET", "/v2/backend/categories", nil)
+	response := executeRequest(req)
+	fmt.Println(response.Body)
+}
+
+func TestFetchPosts(t *testing.T) {
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertPost(db)
+	form := url.Values{}
+	form.Add("token", "0003020")
+	form.Add("pageNumber",  "1")
+	form.Add("pageSize", "10")
+	req, _ := http.NewRequest("POST", "/v2/backend/posts", strings.NewReader(form.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }
