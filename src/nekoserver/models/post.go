@@ -135,6 +135,28 @@ func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
 	return nil, posts
 }
 
+func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []data.Post) {
+	statement := fmt.Sprintf("SELECT * FROM post WHERE category='%s' ORDER BY `createdAt` DESC LIMIT %d OFFSET %d", cid, count, start)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		return err, []data.Post{}
+	}
+	rows, err := db.Query(statement)
+	if err != nil {
+		return err, []data.Post{}
+	}
+	posts := []data.Post{}
+	for rows.Next() {
+		var p data.Post
+		if err = rows.Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt); err != nil {
+			return err, nil
+		}
+		p.Body = html.UnescapeString(p.Body)
+		posts = append(posts, p)
+	}
+	return nil, posts
+}
+
 func fetchAllPosts() (error, []data.Post) {
 	statement := fmt.Sprintf("SELECT id, created FROM post ORDER BY `createdAt` DESC")
 
