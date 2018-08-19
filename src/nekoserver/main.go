@@ -25,17 +25,17 @@ func main() {
 		Driver: "mysql",
 		MaxIdle: maxIdle,
 		MaxOpen: maxOpen,
-		Name: "bangdream",
+		Name: "nekohand",
 		Source: source,
 	}
 
 	var Apps = make(map[string]data.Database)
 
-	Apps["bangdream"] = database
+	Apps["nekohand"] = database
 
 	_func.AssignAppDataBaseList(Apps)
 
-	_func.AssignDatabaseFromList([]string{"bangdream"})
+	_func.AssignDatabaseFromList([]string{"nekohand"})
 
 	engine := gin.New()
 
