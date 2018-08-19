@@ -16,4 +16,5 @@ func AssignBackendRouter(engine *gin.Engine) {
 	/*posts*/
 	routerGroup.Handle("POST", "posts", controller.PostsFetch)
 	routerGroup.Handle("POST", "posts/:cid", controller.PostsFetchByCategory)
+	routerGroup.Handle("POST", "post/:pid", controller.PostFetchOne)
 }

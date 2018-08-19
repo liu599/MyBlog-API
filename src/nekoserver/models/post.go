@@ -159,6 +159,18 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 	return nil, posts
 }
 
+func PostFetchOne(id string) (error, data.Post) {
+	statement := fmt.Sprintf("SELECT * FROM post WHERE id='%s'", id)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		fmt.Println("Error Database Connection")
+		return err, data.Post{}
+	}
+	var p data.Post
+	db.QueryRow(statement).Scan(p)
+	return err, p
+}
+
 func fetchAllPosts() (error, []data.Post) {
 	statement := fmt.Sprintf("SELECT id, created FROM post ORDER BY `createdAt` DESC")
 

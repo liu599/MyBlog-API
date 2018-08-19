@@ -57,3 +57,15 @@ func PostsFetchByCategory(context *gin.Context) {
 
 	_func.Respond(context, http.StatusOK, mk)
 }
+
+func PostFetchOne(context *gin.Context) {
+	id := context.Param("pid")
+	err, post := models.PostFetchOne(id)
+	if err != nil {
+		_func.Respond(context, http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	mk := make(map[string]interface{})
+	mk["data"] = post
+	_func.Respond(context, http.StatusOK, mk)
+}
