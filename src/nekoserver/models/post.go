@@ -72,7 +72,7 @@ func DeletePost(id string) error {
 	return err
 }
 
-func fetchPostsTotalNumber() (error, int) {
+func PostsFetchTotalNumber() (error, int) {
 
 	var countNumber int
 
@@ -95,7 +95,7 @@ func fetchPostsTotalNumber() (error, int) {
 	return  nil, countNumber
 }
 
-func fetchPostsTotalNumberByCategory(id string) (error, int) {
+func PostsFetchTotalNumberByCategory(id string) (error, int) {
 	var countNumber int
 
 	statement := fmt.Sprintf("SELECT COUNT(pid) FROM post where category=%s", id)

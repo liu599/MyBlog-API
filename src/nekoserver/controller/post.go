@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 	"nekoserver/models"
 
@@ -23,6 +24,13 @@ func PostsFetch(context *gin.Context) {
 	mk := make(map[string]interface{})
 
 	mk["data"] = posts
+
+	_, totalNumber := models.PostsFetchTotalNumber()
+	mk["pager"]  = data.Pager{
+		PageNum: pageNumber,
+		PageSize: pageSize,
+		TotalNumber: totalNumber,
+	}
 	_func.Respond(context, http.StatusOK, mk)
 }
 
@@ -39,5 +47,13 @@ func PostsFetchByCategory(context *gin.Context) {
 	mk := make(map[string]interface{})
 
 	mk["data"] = posts
+
+	_, totalCategoryNumber := models.PostsFetchTotalNumberByCategory(cid)
+	mk["pager"]  = data.Pager{
+		PageNum: pageNumber,
+		PageSize: pageSize,
+		TotalNumber: totalCategoryNumber,
+	}
+
 	_func.Respond(context, http.StatusOK, mk)
 }
