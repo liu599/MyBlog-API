@@ -209,9 +209,10 @@ func TestFetchCategories(t *testing.T) {
 }
 
 func TestFetchPosts(t *testing.T) {
-	db, _ := _func.MySqlGetDB("nekohand")
-	insertPost(db)
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertPost(db)
 	form := url.Values{}
+	fmt.Println(bson.NewObjectId().Hex(), "ID")
 	form.Add("token", "0003020")
 	form.Add("pageNumber",  "2")
 	form.Add("pageSize", "10")
