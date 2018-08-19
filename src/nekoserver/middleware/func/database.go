@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+
 	"nekoserver/middleware/data"
-	"v3/common"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -75,7 +75,8 @@ func MySqlGetDB(connection string) (*sqlx.DB, error) {
 		AssignDatabaseFromList([]string{"nekohand"})
 		conn, exists = AppDatabase[connection]
 		if !exists {
-			err = fmt.Errorf(common.MSG_DATABASE_CONNECTION_NOT_EXISTS)
+			err = fmt.Errorf("%s", "Database Connection Not Exists")
+			//err = fmt.Errorf(common.MSG_DATABASE_CONNECTION_NOT_EXISTS)
 			return nil, err
 		}
 	}

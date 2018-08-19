@@ -8,6 +8,8 @@ export SERVER_DB_URL="127.0.0.1:3306"
 export SERVER_LISTEN="127.0.0.1:1"
 export SERVER_AUTHORIZATION="17fb639cd1e0cb0b3054b88dfa984697"
 
+go build /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/src/nekoserver/main.go
+
 #shell
 curl https://glide.sh/get | sh
 export PATH=$PATH:/usr/local/go/bin
