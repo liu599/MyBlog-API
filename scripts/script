@@ -1,14 +1,71 @@
 #database
+const userTableCreationQuery = `
+CREATE TABLE IF NOT EXISTS user
+(
+    uid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         VARCHAR(50) UNIQUE NOT NULL,
+	name       VARCHAR(32)  NOT NULL,
+	password   VARCHAR(100)  NOT NULL,
+	mail       VARCHAR(200)  NOT NULL,
+	createdAt  INT(64)  NOT NULL,
+	loggedAt   INT(64) NOT NULL
+) character set = utf8`
+
+const postTableCreationQuery = `
+CREATE TABLE IF NOT EXISTS post
+(
+    pid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         VARCHAR(50) UNIQUE NOT NULL,
+	author	   VARCHAR(50) NOT NULL,
+	category   VARCHAR(50) NOT NULL,
+	body	   TEXT(1000) NOT NULL,
+	ptitle     VARCHAR(32)  NOT NULL,
+	slug       VARCHAR(32)  NOT NULL,
+	password   VARCHAR(32)  NOT NULL,
+	createdAt  INT(64)  NOT NULL,
+	modifiedAt   INT(64) NOT NULL
+) character set = utf8`
+
+const categoryTableCreationQuery = `
+CREATE TABLE IF NOT EXISTS category
+(
+    cid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         VARCHAR(50) UNIQUE NOT NULL,
+	cname	   VARCHAR(50) UNIQUE NOT NULL,
+	cinfo     VARCHAR(32) NULL
+) character set = utf8`
+
+const commentTableCreationQuery = `
+CREATE TABLE IF NOT EXISTS comment
+(
+    coid       INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         VARCHAR(50) UNIQUE NOT NULL,
+    pid        VARCHAR(50) NOT NULL,
+	author	   VARCHAR(50) NOT NULL,
+	mail	   VARCHAR(50) NOT NULL,
+	url	       VARCHAR(200) NOT NULL,
+	ip         VARCHAR(80) NOT NULL,
+	prid       VARCHAR(50) NOT NULL,
+	body	   TEXT(1000) NOT NULL,
+	createdAt  INT(64)  NOT NULL,
+	modifiedAt INT(64) NOT NULL
+) character set = utf8`
+
+
 
 #server
 export GINMODE="debug"
 export SERVER_DB_MAX_IDLE = "5"
 export SERVER_DB_MAX_OPEN = "10"
 export SERVER_DB_URL="127.0.0.1:3306"
-export SERVER_LISTEN="127.0.0.1:1"
+export SERVER_LISTEN="127.0.0.1:19589"
 export SERVER_AUTHORIZATION="17fb639cd1e0cb0b3054b88dfa984697"
 
+cd /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin
+mkdir release && cd release
 go build /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/src/nekoserver/main.go
+mv /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/main /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/nekoserverv2
+/home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/nekoserverv2
 
 #shell
 curl https://glide.sh/get | sh

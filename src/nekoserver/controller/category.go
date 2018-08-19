@@ -21,6 +21,7 @@ func CategoriesFetch(context *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 		_func.Respond(context, http.StatusBadRequest, nil)
+		return
 	}
 
 	_func.Respond(context, http.StatusOK, mk)
