@@ -169,6 +169,9 @@ func PostFetchOne(id string) (error, data.Post) {
 	}
 	var p data.Post
 	err = db.QueryRow(statement).Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt)
+	if err != nil {
+		return err, data.Post{}
+	}
 	return err, p
 }
 
