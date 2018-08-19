@@ -67,9 +67,9 @@ func FetchCategoryList() (error, []data.Category) {
 			return err, []data.Category{}
 		}
 		if nulString.Valid {
-			cat.CInfo = ""
-		} else {
 			cat.CInfo = nulString.String
+		} else {
+			cat.CInfo = ""
 		}
 		categoryList = append(categoryList, cat)
 	}
