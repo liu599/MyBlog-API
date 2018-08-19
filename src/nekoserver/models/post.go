@@ -121,6 +121,7 @@ func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
 	}
 	rows, err := db.Query(statement)
 	if err != nil {
+		fmt.Println(err)
 		return err, []data.Post{}
 	}
 	posts := []data.Post{}
