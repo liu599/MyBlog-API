@@ -98,7 +98,7 @@ func PostsFetchTotalNumber() (error, int) {
 func PostsFetchTotalNumberByCategory(id string) (error, int) {
 	var countNumber int
 
-	statement := fmt.Sprintf("SELECT COUNT(pid) FROM post where category=%s", id)
+	statement := fmt.Sprintf("SELECT COUNT(pid) FROM post where category='%s'", id)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
