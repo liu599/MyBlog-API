@@ -1,8 +1,16 @@
 #database
 
 #server
-export GOPATH="/home/wwwroot/www.blog.nekohand.moe/NekohandNewServer"
-export SM_LISTEN="127.0.0.1:6431"
+export GINMODE="debug"
+export SERVER_DB_MAX_IDLE = "5"
+export SERVER_DB_MAX_OPEN = "10"
+export SERVER_DB_URL="127.0.0.1:3306"
+export SERVER_LISTEN="127.0.0.1:1"
+export SERVER_AUTHORIZATION="17fb639cd1e0cb0b3054b88dfa984697"
 
 #shell
+curl https://glide.sh/get | sh
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH="/home/wwwroot/www.blog.nekohand.moe/NekohandNewServer"
+export GOBIN="/usr/local/go/bin"
 vim ~/.bashrc
