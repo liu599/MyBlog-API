@@ -1,0 +1,8 @@
+#database
+
+#server
+export GOPATH="/home/wwwroot/www.blog.nekohand.moe/NekohandNewServer"
+export SM_LISTEN="127.0.0.1:6431"
+
+#shell
+vim ~/.bashrc
