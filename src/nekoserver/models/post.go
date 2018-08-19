@@ -144,6 +144,7 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 	}
 	rows, err := db.Query(statement)
 	if err != nil {
+		fmt.Println(err)
 		return err, []data.Post{}
 	}
 	posts := []data.Post{}
