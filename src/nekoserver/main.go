@@ -7,6 +7,8 @@ import (
 	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 
@@ -20,6 +22,7 @@ func main() {
 	maxIdle, _ := strconv.Atoi(os.Getenv("SERVER_DB_MAX_IDLE"))
 	maxOpen, _ := strconv.Atoi(os.Getenv("SERVER_DB_MAX_OPEN"))
 	source := os.Getenv("SERVER_DB_URL")
+	staticRoot := os.Getenv("SERVER_STATIC_ROOT")
 
 	database := data.Database{
 		Driver: "mysql",
@@ -41,7 +44,13 @@ func main() {
 
 	engine.Use(gin.Logger())
 
+	engine.Use(cors.Default())
+
+	engine.Use(static.Serve("/v2/files/", static.LocalFile(staticRoot, true)))
+
 	router.AssignBackendRouter(engine)
+
+	router.AssignFrontendRouter(engine)
 
 	engine.Run(":19992")
 }
