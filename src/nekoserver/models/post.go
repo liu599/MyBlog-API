@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"html"
 	"html/template"
@@ -16,7 +17,7 @@ func CreatePost(p data.Post) (error, string) {
 
 	id := bson.NewObjectId().Hex()
 
-	statement := fmt.Sprintf("INSERT INTO post (id, ptitle, slug, created, modified, author, template, category, password, status, body) VALUES('%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')",
+	statement := fmt.Sprintf("INSERT INTO post (poid, ptitle, slug, created, modified, author, template, category, password, status, body) VALUES('%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')",
 		p.Id, p.PTitle, p.Slug, p.CreatedAt, p.ModifiedAt, p.Author, p.Category, p.Password, p.Body)
 
 	db, err := _func.MySqlGetDB("nekohand")
@@ -43,7 +44,7 @@ func UpdatePost(post data.Post) error {
 
 	post.Body = template.HTMLEscapeString(post.Body)
 
-	statement := fmt.Sprintf("UPDATE post SET ptitle='%s', slug='%s', category='%s', author='%s', body='%s', password='%s', createdAt='%d', modifiedAt='%d' WHERE id=%s",
+	statement := fmt.Sprintf("UPDATE post SET ptitle='%s', slug='%s', category='%s', author='%s', body='%s', password='%s', createdAt='%d', modifiedAt='%d' WHERE poid=%s",
 		post.PTitle, post.Slug, post.Category, post.Author, post.Body, post.Password, post.CreatedAt, post.ModifiedAt, post.Id)
 
 	db, err := _func.MySqlGetDB("nekohand")
@@ -62,7 +63,7 @@ func UpdatePost(post data.Post) error {
 }
 
 func DeletePost(id string) error {
-	statement := fmt.Sprintf("DELETE FROM post WHERE id=%d", id)
+	statement := fmt.Sprintf("DELETE FROM post WHERE poid=%d", id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
 		fmt.Println("Error Database Connection")
@@ -114,7 +115,7 @@ func PostsFetchTotalNumberByCategory(id string) (error, int) {
 }
 
 func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
-	statement := fmt.Sprintf("SELECT * FROM post ORDER BY `createdAt` DESC LIMIT %d OFFSET %d", count, start)
+	statement := fmt.Sprintf("SELECT * FROM post left join category on post.category=category.id ORDER BY `createdAt` DESC LIMIT %d OFFSET %d", count, start)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
 		return err, []data.Post{}
@@ -127,17 +128,20 @@ func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
 	posts := []data.Post{}
 	for rows.Next() {
 		var p data.Post
-		if err = rows.Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt); err != nil {
+		var cc data.Category
+		var nulString sql.NullString
+		if err = rows.Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString); err != nil {
 			return err, nil
 		}
 		p.Body = html.UnescapeString(p.Body)
+		p.Category = cc.CName
 		posts = append(posts, p)
 	}
 	return nil, posts
 }
 
 func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []data.Post) {
-	statement := fmt.Sprintf("SELECT * FROM post WHERE category='%s' ORDER BY `createdAt` DESC LIMIT %d OFFSET %d", cid, count, start)
+	statement := fmt.Sprintf("SELECT * FROM post left join category on post.category=category.id WHERE category='%s' ORDER BY `createdAt` DESC LIMIT %d OFFSET %d", cid, count, start)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
 		return err, []data.Post{}
@@ -150,17 +154,20 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 	posts := []data.Post{}
 	for rows.Next() {
 		var p data.Post
-		if err = rows.Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt); err != nil {
+		var cc data.Category
+		var nulString sql.NullString
+		if err = rows.Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString); err != nil {
 			return err, nil
 		}
 		p.Body = html.UnescapeString(p.Body)
+		p.Category = cc.CName
 		posts = append(posts, p)
 	}
 	return nil, posts
 }
 
 func PostFetchOne(id string) (error, data.Post) {
-	statement := fmt.Sprintf("SELECT * FROM post WHERE id='%s'", id)
+	statement := fmt.Sprintf("SELECT * FROM post left join category on post.category=category.id WHERE poid='%s'", id)
 	fmt.Println(statement)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -168,7 +175,10 @@ func PostFetchOne(id string) (error, data.Post) {
 		return err, data.Post{}
 	}
 	var p data.Post
-	err = db.QueryRow(statement).Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt)
+	var cc data.Category
+	var nulString sql.NullString
+	err = db.QueryRow(statement).Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString)
+	p.Category = cc.CName
 	if err != nil {
 		return err, data.Post{}
 	}
@@ -176,7 +186,7 @@ func PostFetchOne(id string) (error, data.Post) {
 }
 
 func fetchAllPosts() (error, []data.Post) {
-	statement := fmt.Sprintf("SELECT id, created FROM post ORDER BY `createdAt` DESC")
+	statement := fmt.Sprintf("SELECT poid, created FROM post ORDER BY `createdAt` DESC")
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {

@@ -222,6 +222,14 @@ func TestFetchPosts(t *testing.T) {
 	fmt.Println(response.Body)
 }
 
+func TestFetchOnePost(t *testing.T) {
+	form := url.Values{}
+	req, _ := http.NewRequest("POST", "/v2/backend/post/5b6c42b25c964c10a4c68d19", strings.NewReader(form.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	response := executeRequest(req)
+	fmt.Println(response.Body)
+}
+
 func TestFetchPostsByCategory(t *testing.T) {
 	form := url.Values{}
 	form.Add("token", "0003020")
