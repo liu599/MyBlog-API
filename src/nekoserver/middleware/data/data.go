@@ -27,6 +27,7 @@ type (
 		Password string   `json:"password"`
 		CreatedAt  int64  `json:"createdAt"`
 		ModifiedAt int64  `json:"modifiedAt"`
+		PLINK      string `json:"plink"`
 	}
 	Pager struct {
 		PageNum         int `json:"pageNum"`
@@ -51,6 +52,7 @@ type (
 		CID   int `json:"cid"`
 		Id    string `json:"id"`
 		CName string `json:"cname"`
+		CLink string `json:"clink"`
 		CInfo string `json:"cinfo"`
 	}
 	UserDetail struct {

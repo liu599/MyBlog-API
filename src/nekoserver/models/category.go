@@ -15,8 +15,8 @@ func CreateCategory(category data.Category) (error, string) {
 
 	id := bson.NewObjectId().Hex()
 
-	statement := fmt.Sprintf("INSERT INTO category (id, cname, cinfo) VALUES ('%s', '%s', '%s')",
-		id, category.CID, category.CInfo)
+	statement := fmt.Sprintf("INSERT INTO category (id, cname, clink, cinfo) VALUES ('%s', '%s', '%s', '%s')",
+		id, category.CID, category.CInfo, category.CLink)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -34,7 +34,7 @@ func CreateCategory(category data.Category) (error, string) {
 }
 
 func UpdateCategory(category data.Category) (error, string) {
-	statement := fmt.Sprintf("UPDATE category SET cname='%s', cinfo='%s' WHERE id='%s'",
+	statement := fmt.Sprintf("UPDATE category SET cname='%s', clink='%s', cinfo='%s' WHERE id='%s'",
 		category.CName, category.CInfo, category.Id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -63,7 +63,7 @@ func FetchCategoryList() (error, []data.Category) {
 	for rows.Next() {
 		var cat data.Category
 		var nulString sql.NullString
-		if err := rows.Scan(&cat.CID, &cat.Id, &cat.CName, &nulString); err != nil {
+		if err := rows.Scan(&cat.CID, &cat.Id, &cat.CName, &cat.CLink, &nulString); err != nil {
 			return err, []data.Category{}
 		}
 		if nulString.Valid {
@@ -84,7 +84,7 @@ func FetchOneCategory(id string) (error, data.Category) {
 		fmt.Println("Error Database Connection")
 		return err, data.Category{}
 	}
-	err = db.QueryRow(statement).Scan(&category.CID, &category.Id, &category.CName, &category.CInfo)
+	err = db.QueryRow(statement).Scan(&category.CID, &category.Id, &category.CName, &category.CInfo, &category.CLink)
 	if err != nil {
 		return err, data.Category{}
 	}
