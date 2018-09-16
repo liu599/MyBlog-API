@@ -78,5 +78,6 @@ vim ~/.bashrc
 #supervisor
 service supervisor start
 supervisorctl reload
+supervisord -c /etc/supervisor/supervisord.conf
 supervisorctl restart blogserver2
 supervisorctl update
