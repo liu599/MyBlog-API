@@ -69,3 +69,14 @@ func PostFetchOne(context *gin.Context) {
 	mk["data"] = post
 	_func.Respond(context, http.StatusOK, mk)
 }
+
+func PostsChornology(context *gin.Context) {
+	err, chr := models.PostsFetchChronology()
+	if err != nil {
+		_func.Respond(context, http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+	mk := make(map[string]interface{})
+	mk["data"] = chr
+	_func.Respond(context, http.StatusOK, mk)
+}

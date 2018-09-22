@@ -73,6 +73,33 @@ func DeletePost(id string) error {
 	return err
 }
 
+func PostsFetchChronology() (error, []string) {
+	statement := fmt.Sprintf("select DATE_FORMAT(FROM_UNIXTIME(`createdAt`), '%s') from post ORDER BY `createdAt` ASC", "%Y%m")
+	fmt.Println(statement)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		fmt.Println("Error Database Connection")
+		return err, nil
+	}
+	rows, err := db.Query(statement)
+
+	var ret []string
+	for rows.Next() {
+		var p string
+		if err = rows.Scan(&p); err != nil {
+			return err, nil
+		}
+		ret = append(ret, p)
+	}
+	ret = _func.ArrayFilter(ret)
+	if err != nil {
+		fmt.Println("Failure to get chronology")
+		return err, nil
+	}
+	return nil, ret
+}
+
+
 func PostsFetchTotalNumber() (error, int) {
 
 	var countNumber int

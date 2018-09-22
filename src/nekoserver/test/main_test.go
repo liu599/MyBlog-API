@@ -114,8 +114,8 @@ CREATE TABLE IF NOT EXISTS category
 const commentTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS comment
 (
-    coid       INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id         VARCHAR(50) UNIQUE NOT NULL,
+    comid      INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    commentid  VARCHAR(50) UNIQUE NOT NULL,
     pid        VARCHAR(50) NOT NULL,
 	author	   VARCHAR(50) NOT NULL,
 	mail	   VARCHAR(50) NOT NULL,
@@ -161,7 +161,7 @@ func TestEmptyTable(t *testing.T) {
 	//	fmt.Println("JSON Illegal")
 	//	return
 	//}
-	checkResponseCode(t, http.StatusOK, http.StatusOK)
+	//checkResponseCode(t, http.StatusOK, http.StatusOK)
 	//if body := fmt.Sprintf("%v", r.Data); body != "[]" {
 	//	t.Errorf("Expected an empty array. Got %s", body)
 	//}
@@ -237,6 +237,15 @@ func TestFetchPostsByCategory(t *testing.T) {
 	form.Add("pageSize", "10")
 	form.Add("category", "5b6c42b25c964c10a4c68d1a")
 	req, _ := http.NewRequest("POST", "/v2/backend/posts/5b6c42b25c964c10a4c68d1a", strings.NewReader(form.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	response := executeRequest(req)
+	fmt.Println(response.Body)
+}
+
+func TestFetchPostsChronology(t *testing.T) {
+	form := url.Values{}
+	form.Add("token", "0003020")
+	req, _ := http.NewRequest("GET", "/v2/backend/posts-chronology", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)

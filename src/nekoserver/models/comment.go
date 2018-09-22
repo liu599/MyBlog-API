@@ -48,8 +48,8 @@ func createComment() error {
 	return err
 }
 
-func fetchComments(id string, start, count int) (error, []data.Comment) {
-	statement := fmt.Sprintf("SELECT * FROM comment WHERE id=%s LIMIT %d OFFSET %d", id, count, start)
+func FetchComments(id string, start, count int) (error, []data.Comment) {
+	statement := fmt.Sprintf("SELECT * FROM comment WHERE pid=%s LIMIT %d OFFSET %d", id, count, start)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
