@@ -22,20 +22,16 @@ func deleteComment(id string) error {
 	return err
 }
 
-func createComment() error {
+func CommentCreate(co data.Comment) error {
 
 	timestamp := time.Now().Unix()
-
-	var co data.Comment
 
 	co.CreatedAt = timestamp
 
 	co.ModifiedAt = timestamp
 
-	// TODO: Validate whether the post exists
-
-	statement := fmt.Sprintf("INSERT INTO comment (id, pid, createdAt, ModifiedAt, author, url, ip, body, prid, mail) VALUES('%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s')",
-		 co.Id, co.PID, co.CreatedAt, co.ModifiedAt, co.Author, co.Url, co.Ip, co.Body, co.Prid, co.Mail)
+	statement := fmt.Sprintf("INSERT INTO comment ( commentid, pid, author, mail, url, ip, prid, body, createdAt, ModifiedAt) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d')",
+		 co.COMID, co.PID, co.Author, co.Mail, co.Url, co.Ip, co.Prid, co.Body, co.CreatedAt, co.ModifiedAt)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -48,8 +44,8 @@ func createComment() error {
 	return err
 }
 
-func FetchComments(id string, start, count int) (error, []data.Comment) {
-	statement := fmt.Sprintf("SELECT * FROM comment WHERE pid=%s LIMIT %d OFFSET %d", id, count, start)
+func CommentsFetch(id string) (error, []data.Comment) {
+	statement := fmt.Sprintf("SELECT * FROM comment WHERE pid='%s'", id)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -65,7 +61,7 @@ func FetchComments(id string, start, count int) (error, []data.Comment) {
 
 	for rows.Next() {
 		var co data.Comment
-		if err := rows.Scan(&co.PID, &co.Id, &co.CreatedAt, &co.ModifiedAt, &co.Author, &co.Url, &co.Ip, &co.Body, &co.Prid, &co.Mail); err != nil {
+		if err := rows.Scan(&co.COID, &co.PID, &co.COMID, &co.Author, &co.Mail, &co.Url, &co.Ip, &co.Prid, &co.Body, &co.CreatedAt, &co.ModifiedAt); err != nil {
 			return err, nil
 		}
 		comments = append(comments, co)

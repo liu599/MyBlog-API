@@ -1,6 +1,8 @@
 package test
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,7 +17,7 @@ import (
 	"nekoserver/middleware/func"
 	"nekoserver/router"
 
-	gin "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/mgo.v2/bson"
@@ -127,12 +129,13 @@ CREATE TABLE IF NOT EXISTS comment
 	modifiedAt INT(64) NOT NULL
 ) character set = utf8`
 
+
 // 发送请求
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
 	gin.SetMode(gin.ReleaseMode)
 	engine := gin.New()
-	engine.Use()
+	//engine.Use(auth.TokenAuthMiddleware())
 
 	// Router
 	router.AssignBackendRouter(engine)
@@ -150,7 +153,6 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 func TestEmptyTable(t *testing.T) {
 	// clearTable(db)
 	form := url.Values{}
-	form.Add("token", "0003020")
 	req, _ := http.NewRequest("GET", "/v2/backend/status", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
@@ -244,9 +246,49 @@ func TestFetchPostsByCategory(t *testing.T) {
 
 func TestFetchPostsChronology(t *testing.T) {
 	form := url.Values{}
-	form.Add("token", "0003020")
 	req, _ := http.NewRequest("GET", "/v2/backend/posts-chronology", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	response := executeRequest(req)
+	fmt.Println(response.Body)
+}
+
+func insertComment(db *sqlx.DB) {
+	statement := fmt.Sprintf("INSERT INTO comment (commentid, pid, author, mail, url, ip, prid, body, createdAt, modifiedAt) VALUES('%s', '%s', '%s','%s', '%s', '%s', '%s', '%s', '%d', '%d')", bson.NewObjectId().Hex(), "5b6c5ced5c964c2770f66e8a", "eddie32", "1185414132@qq.com", "https://bbs.nekohand.moe", "102.22.22.22", "5bb8436c5c964c04e0367836", "This is a reply 2", time.Now().Unix(), time.Now().Unix())
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		fmt.Println("Database error")
+	}
+}
+
+func TestFetchComments(t *testing.T) {
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertComment(db)
+	form := url.Values{}
+	form.Add("token", "0003020")
+	req, _ := http.NewRequest("POST", "/v2/backend/comments/5b6c5ced5c964c2770f66e8a", strings.NewReader(form.Encode()))
+	response := executeRequest(req)
+	fmt.Println(response.Body)
+}
+
+func TestCreateComment(t *testing.T) {
+	comet := &data.Comment{}
+	comet.COMID = bson.NewObjectId().Hex()
+	comet.PID = "5b72f09a5c964c32f078402c"
+	comet.Author = "eddjkladfja"
+	comet.Mail = "460512944@qq.com"
+	comet.Url = "https://bbs.sss.com"
+	comet.Ip = "102.22.8.225"
+	comet.Prid = "0"
+	comet.Body = "nice blog"
+	comet.CreatedAt = time.Now().Unix()
+	comet.ModifiedAt = time.Now().Unix()
+	jsonStr, err := json.Marshal(comet)
+	if err != nil {
+		panic(err)
+	}
+	req, _ := http.NewRequest("POST", "/v2/backend/c2a5cc3b070", bytes.NewBuffer(jsonStr))
+	req.Header.Add("Content-Type", "application/json")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }

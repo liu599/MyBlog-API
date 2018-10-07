@@ -35,18 +35,17 @@ type (
 		TotalNumber     int `json:"total"`
 	}
 	Comment struct {
-		COID    int `json:"coid"`
-		Id      string `json:"id"`
+		COID    int    `json:"comid"`
+		COMID   string `json:"commentid"`
 		PID     string `json:"pid"`
-		Prid  string `json:"prid"` // Parent ID
-		CreatedAt int64 `json:"created"`
-		ModifiedAt int64  `json:"modifiedAt"`
 		Author  string `json:"author"`
+		Mail    string `json:"mail"`
 		Url     string `json:"url"`
 		Ip      string `json:"ip"`
+		Prid  string `json:"prid"` // Parent ID
 		Body    string `json:"body"`
-		Status  string `json:"status"`
-		Mail    string `json:"mail"`
+		CreatedAt int64 `json:"created"`
+		ModifiedAt int64  `json:"modifiedAt"`
 	}
 	Category struct {
 		CID   int `json:"cid"`
