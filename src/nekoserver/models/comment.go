@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"gopkg.in/mgo.v2/bson"
 	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 )
@@ -25,6 +26,8 @@ func deleteComment(id string) error {
 func CommentCreate(co data.Comment) error {
 
 	timestamp := time.Now().Unix()
+
+	co.COMID = bson.NewObjectId().Hex()
 
 	co.CreatedAt = timestamp
 
