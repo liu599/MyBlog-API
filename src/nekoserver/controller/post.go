@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"gopkg.in/mgo.v2/bson"
 	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 	"nekoserver/models"
@@ -78,5 +79,11 @@ func PostsChornology(context *gin.Context) {
 	}
 	mk := make(map[string]interface{})
 	mk["data"] = chr
+	_func.Respond(context, http.StatusOK, mk)
+}
+
+func PostCreation(context *gin.Context) {
+	mk := make(map[string]interface{})
+	mk["data"] = "a post has been successful created " + bson.NewObjectId().Hex()
 	_func.Respond(context, http.StatusOK, mk)
 }

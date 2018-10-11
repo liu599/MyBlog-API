@@ -72,3 +72,17 @@ func CommentsFetch(id string) (error, []data.Comment) {
 
 	return nil, comments
 }
+
+func CommentsFetchNumber(id string) (error, int) {
+	var countNumber int
+	statement := fmt.Sprintf("SELECT COUNT(commentid) FROM comment WHERE pid='%s'", id)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		fmt.Println("Error Database Connection")
+		return err, -25252
+	}
+
+	err = db.QueryRow(statement).Scan(&countNumber)
+
+	return nil, countNumber
+}

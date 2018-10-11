@@ -43,7 +43,7 @@ func ensureTableExists(db *sqlx.DB) {
 
 func TestMain(m *testing.M) {
 
-	os.Setenv("PASS_GEN", "adfasfadfasf")
+	os.Setenv("PASS_GEN", "asdfasd")
 
 	os.Setenv("NEKO_TOKEN", "c131c35a24d")
 
@@ -207,16 +207,6 @@ func insertPost(db *sqlx.DB) {
 }
 
 
-func insertUser(db *sqlx.DB) {
-	dk, _ := scrypt.Key([]byte("!7d4a3eEDDIE"), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
-	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%v', '%d', '%d')", bson.NewObjectId().Hex(), "tokei", dk, "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
-	_, err := db.Exec(statement)
-
-	if err != nil {
-		panic(err)
-		fmt.Println("Database error")
-	}
-}
 
 func TestFetchCategories(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
@@ -310,12 +300,23 @@ func TestCreateComment(t *testing.T) {
 	fmt.Println(response.Body)
 }
 
+
+func insertUser(db *sqlx.DB) {
+	dk, _ := scrypt.Key([]byte("w23456789"), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
+	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%v', '%d', '%d')", bson.NewObjectId().Hex(), "tokeiwwww", dk, "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		panic(err)
+		fmt.Println("Database error")
+	}
+}
 func TestAuth(t *testing.T) {
-	db, _ := _func.MySqlGetDB("nekohand")
-	insertUser(db)
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertUser(db)
 	form := url.Values{}
-	form.Add("username", "tokei")
-	form.Add("password", "adfadsafdsfaafasd")
+	form.Add("username", "tokeiwwww")
+	form.Add("password", "w23456789")
 	req, _ := http.NewRequest("POST", "/v2/backend/token.get", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
@@ -336,7 +337,7 @@ func TestAuth(t *testing.T) {
 	if body := fmt.Sprintf("%v", responseBody.API_TOKEN); body != "[]" {
 		req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.create", nil)
 		req2.Header.Set("Authorization", body)
-		req2.Header.Set("User", "tokei")
+		req2.Header.Set("User", "tokeiwwww")
 		req2.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		response2 := executeRequest(req2)
 		fmt.Println(response2.Body)

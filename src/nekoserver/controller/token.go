@@ -20,8 +20,9 @@ func TokenGen(context *gin.Context) {
 	usr.Name = user
 	dk, _ := scrypt.Key([]byte(password), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
 	usr.Password = dk
+	fmt.Println(dk)
 	mk := make(map[string]interface{})
-	err, sign := models.CheckUser(usr)
+	err, sign := models.TokenCheckUser(usr)
 	if err != nil {
 		_func.RespondError(context, http.StatusUnauthorized, data.Error{
 			Message: fmt.Sprintf("%v", err),

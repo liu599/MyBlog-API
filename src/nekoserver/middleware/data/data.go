@@ -27,7 +27,8 @@ type (
 		Password string   `json:"password"`
 		CreatedAt  int64  `json:"createdAt"`
 		ModifiedAt int64  `json:"modifiedAt"`
-		PLINK      string `json:"plink"`
+		Plink      string `json:"plink"`
+		Comment    int    `json:"comment"`
 	}
 	Pager struct {
 		PageNum         int `json:"pageNum"`
@@ -64,8 +65,9 @@ type (
 	}
 	User struct {
 		UID      int    `json:"uid"`
+		USID     string `json:"usid"`
 		Name     string `json:"name"`
-		Password string `json:"password"`
+		Password []byte `json:"password"`
 		Mail     string `json:"mail"`
 		CreatedAt  int64  `json:"createdAt"`
 		LoggedAt   int64  `json:"loggedAt"`
