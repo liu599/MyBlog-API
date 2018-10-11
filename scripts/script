@@ -1,15 +1,16 @@
 #database
 const userTableCreationQuery = `
-CREATE TABLE IF NOT EXISTS user
-(
-    uid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id         VARCHAR(50) UNIQUE NOT NULL,
-	name       VARCHAR(32)  NOT NULL,
-	password   VARCHAR(100)  NOT NULL,
-	mail       VARCHAR(200)  NOT NULL,
-	createdAt  INT(64)  NOT NULL,
-	loggedAt   INT(64) NOT NULL
-) character set = utf8`
+CREATE TABLE IF NOT EXISTS user (
+  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` varchar(50) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `password` binary(32) NOT NULL,
+  `mail` varchar(200) NOT NULL,
+  `createdAt` int(64) NOT NULL,
+  `loggedAt` int(64) DEFAULT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `id` (`userid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8`
 
 const postTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS post
@@ -62,6 +63,7 @@ export SERVER_LISTEN="127.0.0.1:19589"
 export SERVER_AUTHORIZATION="17fb639cd1e0cb0b3054b88dfa984697"
 
 cd /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin
+cd /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release
 mkdir release && cd release
 go build /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/src/nekoserver/main.go
 mv /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/main /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/nekoserverv2
@@ -79,6 +81,8 @@ vim ~/.bashrc
 service supervisor start
 supervisorctl reload
 supervisord -c /etc/supervisor/supervisord.conf
+supervisorctl stop blogserver2
+supervisorctl start blogserver2
 supervisorctl restart blogserver2
 supervisorctl update
 38s to built
