@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/hex"
 	"fmt"
 	"net/http"
 	"os"
@@ -34,7 +35,9 @@ func TokenGen(context *gin.Context) {
 		token, _ := auth.GenerateToken(usr.Name, salt)
 		mk["api_token"] = token
 	} else {
-		_func.RespondError(context, http.StatusUnauthorized, data.Error{})
+		_func.RespondError(context, http.StatusUnauthorized, data.Error{
+			Message: hex.EncodeToString(dk),
+		})
 		return
 	}
 	_func.Respond(context, http.StatusOK, mk)

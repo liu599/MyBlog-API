@@ -43,9 +43,9 @@ func ensureTableExists(db *sqlx.DB) {
 
 func TestMain(m *testing.M) {
 
-	os.Setenv("PASS_GEN", "asdfasd")
+	os.Setenv("PASS_GEN", "wwwww")
 
-	os.Setenv("NEKO_TOKEN", "c131c35a24d")
+	os.Setenv("NEKO_TOKEN", "wwww")
 
 	database := data.Database{
 		Driver: "mysql",
@@ -302,8 +302,8 @@ func TestCreateComment(t *testing.T) {
 
 
 func insertUser(db *sqlx.DB) {
-	dk, _ := scrypt.Key([]byte("w23456789"), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
-	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%v', '%d', '%d')", bson.NewObjectId().Hex(), "tokeiwwww", dk, "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
+	dk, _ := scrypt.Key([]byte("wwwwww"), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
+	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%v', '%d', '%d')", bson.NewObjectId().Hex(), "tokeiwwwww", dk, "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
 	_, err := db.Exec(statement)
 
 	if err != nil {
@@ -315,8 +315,8 @@ func TestAuth(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertUser(db)
 	form := url.Values{}
-	form.Add("username", "tokeiwwww")
-	form.Add("password", "w23456789")
+	form.Add("username", "tokei")
+	form.Add("password", "!7d4a3eEDDIE")
 	req, _ := http.NewRequest("POST", "/v2/backend/token.get", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
@@ -337,7 +337,7 @@ func TestAuth(t *testing.T) {
 	if body := fmt.Sprintf("%v", responseBody.API_TOKEN); body != "[]" {
 		req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.create", nil)
 		req2.Header.Set("Authorization", body)
-		req2.Header.Set("User", "tokeiwwww")
+		req2.Header.Set("User", "tokeiwwwwwwww")
 		req2.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		response2 := executeRequest(req2)
 		fmt.Println(response2.Body)
