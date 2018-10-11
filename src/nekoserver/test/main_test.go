@@ -43,7 +43,7 @@ func ensureTableExists(db *sqlx.DB) {
 
 func TestMain(m *testing.M) {
 
-	os.Setenv("PASS_GEN", "$$kasumi$$")
+	os.Setenv("PASS_GEN", "adfasfadfasf")
 
 	os.Setenv("NEKO_TOKEN", "c131c35a24d")
 
@@ -311,11 +311,11 @@ func TestCreateComment(t *testing.T) {
 }
 
 func TestAuth(t *testing.T) {
-	//db, _ := _func.MySqlGetDB("nekohand")
-	//insertUser(db)
+	db, _ := _func.MySqlGetDB("nekohand")
+	insertUser(db)
 	form := url.Values{}
 	form.Add("username", "tokei")
-	form.Add("password", "!7d4a3eEDDIE")
+	form.Add("password", "adfadsafdsfaafasd")
 	req, _ := http.NewRequest("POST", "/v2/backend/token.get", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
