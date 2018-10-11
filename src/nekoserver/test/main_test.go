@@ -13,6 +13,7 @@ import (
 	"testing"
 	"time"
 
+	"golang.org/x/crypto/scrypt"
 	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 	"nekoserver/router"
@@ -41,6 +42,10 @@ func ensureTableExists(db *sqlx.DB) {
 }
 
 func TestMain(m *testing.M) {
+
+	os.Setenv("PASS_GEN", "$$kasumi$$")
+
+	os.Setenv("NEKO_TOKEN", "c131c35a24d")
 
 	database := data.Database{
 		Driver: "mysql",
@@ -81,7 +86,7 @@ const userTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS user
 (
     uid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id         VARCHAR(50) UNIQUE NOT NULL,
+    userid     VARCHAR(50) UNIQUE NOT NULL,
 	name       VARCHAR(32)  NOT NULL,
 	password   VARCHAR(100)  NOT NULL,
 	mail       VARCHAR(200)  NOT NULL,
@@ -201,6 +206,18 @@ func insertPost(db *sqlx.DB) {
 	}
 }
 
+
+func insertUser(db *sqlx.DB) {
+	dk, _ := scrypt.Key([]byte("!7d4a3eEDDIE"), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
+	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%v', '%d', '%d')", bson.NewObjectId().Hex(), "tokei", dk, "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
+	_, err := db.Exec(statement)
+
+	if err != nil {
+		panic(err)
+		fmt.Println("Database error")
+	}
+}
+
 func TestFetchCategories(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertCategories(db)
@@ -216,7 +233,7 @@ func TestFetchPosts(t *testing.T) {
 	form := url.Values{}
 	fmt.Println(bson.NewObjectId().Hex(), "ID")
 	form.Add("token", "0003020")
-	form.Add("pageNumber",  "2")
+	form.Add("pageNumber",  "1")
 	form.Add("pageSize", "10")
 	req, _ := http.NewRequest("POST", "/v2/backend/posts", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -291,4 +308,39 @@ func TestCreateComment(t *testing.T) {
 	req.Header.Add("Content-Type", "application/json")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
+}
+
+func TestAuth(t *testing.T) {
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertUser(db)
+	form := url.Values{}
+	form.Add("username", "tokei")
+	form.Add("password", "!7d4a3eEDDIE")
+	req, _ := http.NewRequest("POST", "/v2/backend/token.get", strings.NewReader(form.Encode()))
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	response := executeRequest(req)
+	fmt.Println(response.Body)
+
+	type RB struct {
+		API_TOKEN string
+	}
+
+	var responseBody RB
+
+	decoder := json.NewDecoder(response.Body)
+	if err := decoder.Decode(&responseBody); err != nil {
+		fmt.Println("JSON Illegal")
+		return
+	}
+
+	if body := fmt.Sprintf("%v", responseBody.API_TOKEN); body != "[]" {
+		req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.create", nil)
+		req2.Header.Set("Authorization", body)
+		req2.Header.Set("User", "tokei")
+		req2.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		response2 := executeRequest(req2)
+		fmt.Println(response2.Body)
+		//t.Errorf("Expected an empty array. Got %s", body)
+	}
+
 }

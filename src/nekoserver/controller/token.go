@@ -2,29 +2,40 @@ package controller
 
 import (
 	"fmt"
-	"time"
+	"net/http"
+	"os"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/scrypt"
+	"nekoserver/middleware/auth"
+	"nekoserver/middleware/data"
+	"nekoserver/middleware/func"
+	"nekoserver/models"
 )
 
-func generateToken(uid int, environmentVariable string) (string, error) {
-
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := make(jwt.MapClaims)
-	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
-	claims["iat"] = time.Now().Unix()
-	token.Claims = claims
-	fmt.Printf("\n%v\n", uid)
-	// str1 := strconv.Itoa(uid)
-	tokenString, err := token.SignedString([]byte(environmentVariable))
-
-	fmt.Printf("\n%v\n", tokenString)
-
+func TokenGen(context *gin.Context) {
+	var usr data.User
+	user := context.PostForm("username")
+	password := context.PostForm("password")
+	usr.Name = user
+	dk, _ := scrypt.Key([]byte(password), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
+	usr.Password = dk
+	mk := make(map[string]interface{})
+	err, sign := models.CheckUser(usr)
 	if err != nil {
-		fmt.Println("error in convert tokenString")
-		return "Cannot convert secret string", err
+		_func.RespondError(context, http.StatusUnauthorized, data.Error{
+			Message: fmt.Sprintf("%v", err),
+		})
+		return
 	}
-
-	return tokenString, nil
+	if sign == true {
+		salt := os.Getenv("NEKO_TOKEN")
+		token, _ := auth.GenerateToken(usr.Name, salt)
+		mk["api_token"] = token
+	} else {
+		_func.RespondError(context, http.StatusUnauthorized, data.Error{})
+		return
+	}
+	_func.Respond(context, http.StatusOK, mk)
 }
 

@@ -99,7 +99,6 @@ func PostsFetchChronology() (error, []string) {
 	return nil, ret
 }
 
-
 func PostsFetchTotalNumber() (error, int) {
 
 	var countNumber int
@@ -162,6 +161,8 @@ func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
 		}
 		p.Body = html.UnescapeString(p.Body)
 		p.Category = cc.CName
+		_, cmNum := CommentsFetchNumber(p.Id)
+		p.Comment = cmNum
 		posts = append(posts, p)
 	}
 	return nil, posts
@@ -188,6 +189,8 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 		}
 		p.Body = html.UnescapeString(p.Body)
 		p.Category = cc.CName
+		_, cmNum := CommentsFetchNumber(p.Id)
+		p.Comment = cmNum
 		posts = append(posts, p)
 	}
 	return nil, posts
@@ -206,6 +209,8 @@ func PostFetchOne(id string) (error, data.Post) {
 	var nulString sql.NullString
 	err = db.QueryRow(statement).Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString)
 	p.Category = cc.CName
+	_, cmNum := CommentsFetchNumber(p.Id)
+	p.Comment = cmNum
 	if err != nil {
 		return err, data.Post{}
 	}
