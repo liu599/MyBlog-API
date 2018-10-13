@@ -44,9 +44,15 @@ func main() {
 
 	engine.Use(gin.Logger())
 
-	engine.Use(cors.Default())
+	config := cors.DefaultConfig()
 
-	engine.Use(static.Serve("/v2/files/", static.LocalFile(staticRoot, true)))
+	config.AddAllowHeaders("User")
+
+	config.AllowCredentials = true
+
+	engine.Use(cors.New(config))
+
+	engine.Use(static.Serve("/files/", static.LocalFile(staticRoot, true)))
 
 	router.AssignBackendRouter(engine)
 
