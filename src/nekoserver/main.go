@@ -46,7 +46,7 @@ func main() {
 
 	config := cors.DefaultConfig()
 
-	config.AddAllowHeaders("User")
+	config.AllowHeaders = []string{"User", "Origin"}
 
 	config.AllowCredentials = true
 
