@@ -18,6 +18,7 @@ import (
 
 func main() {
 
+	gin.SetMode(gin.ReleaseMode)
 	//Configure()
 	maxIdle, _ := strconv.Atoi(os.Getenv("SERVER_DB_MAX_IDLE"))
 	maxOpen, _ := strconv.Atoi(os.Getenv("SERVER_DB_MAX_OPEN"))
@@ -44,13 +45,15 @@ func main() {
 
 	engine.Use(gin.Logger())
 
-	config := cors.DefaultConfig()
-
-	config.AllowHeaders = []string{"User", "Origin"}
-
-	config.AllowCredentials = true
-
-	engine.Use(cors.New(config))
+	engine.Use(cors.New(cors.Config{
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "User-Agent", "Referrer", "Host", "Token", "User"},
+		ExposeHeaders:    []string{"Content-Length", "X-Real-Ip"},
+		AllowCredentials: true,
+		AllowAllOrigins:  false,
+		AllowOriginFunc:  func(origin string) bool { return true },
+		MaxAge:           86400,
+	}))
 
 	engine.Use(static.Serve("/files/", static.LocalFile(staticRoot, true)))
 
