@@ -47,7 +47,7 @@ func main() {
 
 	engine.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "PUT"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "User-Agent", "Referrer", "Host", "Token", "User"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "User-Agent", "Referrer", "Host", "Token", "User", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length", "X-Real-Ip"},
 		AllowCredentials: true,
 		AllowAllOrigins:  false,
