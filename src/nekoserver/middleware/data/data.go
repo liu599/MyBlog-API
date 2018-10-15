@@ -67,7 +67,7 @@ type (
 		UID      int    `json:"uid"`
 		USID     string `json:"usid"`
 		Name     string `json:"name"`
-		Password []byte `json:"password"`
+		Password string `json:"password"`
 		Mail     string `json:"mail"`
 		CreatedAt  int64  `json:"createdAt"`
 		LoggedAt   int64  `json:"loggedAt"`

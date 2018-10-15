@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -83,7 +84,28 @@ func PostsChornology(context *gin.Context) {
 }
 
 func PostCreation(context *gin.Context) {
+
+	var p data.Post
+
+	decoder := json.NewDecoder(context.Request.Body)
+	if err := decoder.Decode(&p); err != nil {
+		_func.RespondError(context, http.StatusBadRequest, data.Error{
+			Message: "Invalid Request Payload",
+		})
+		return
+	}
+
+	defer context.Request.Body.Close()
+
+	err, postId := models.CreatePost(p)
+
+	if err != nil {
+		_func.RespondError(context, http.StatusInternalServerError, data.Error{
+			Message: "Database Error, Fail to create the post",
+		})
+		return
+	}
 	mk := make(map[string]interface{})
-	mk["data"] = "a post has been successful created " + bson.NewObjectId().Hex()
+	mk["data"] = "a post"+ postId + " has been successful created " + bson.NewObjectId().Hex()
 	_func.Respond(context, http.StatusOK, mk)
 }

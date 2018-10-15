@@ -17,18 +17,19 @@ func CreatePost(p data.Post) (error, string) {
 
 	id := bson.NewObjectId().Hex()
 
-	statement := fmt.Sprintf("INSERT INTO post (poid, ptitle, slug, created, modified, author, template, category, password, status, body) VALUES('%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')",
-		p.Id, p.PTitle, p.Slug, p.CreatedAt, p.ModifiedAt, p.Author, p.Category, p.Password, p.Body)
+	statement := fmt.Sprintf("INSERT INTO post (poid, author, category, body, ptitle, slug, password, createdAt, modifiedAt) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d')",
+		id, p.Author, p.Category, p.Body, p.PTitle, p.Slug, p.Password, time.Now().Unix(), time.Now().Unix())
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
+		fmt.Printf("Error Database Connection %v", err)
 		return err, ""
 	}
 
 	_, err = db.Exec(statement)
 
 	if err != nil {
+		fmt.Printf("Fail to execute sql query %v", err)
 		return err, ""
 	}
 

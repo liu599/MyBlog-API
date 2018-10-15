@@ -1,7 +1,6 @@
 package models
 
 import (
-	"bytes"
 	"fmt"
 
 	"nekoserver/middleware/data"
@@ -18,8 +17,8 @@ func TokenCheckUser(usr data.User) (error, bool) {
 		return err, false
 	}
 	err = db.QueryRow(statement).Scan(&uk.UID, &uk.USID, &uk.Name, &uk.Password, &uk.Mail, &uk.CreatedAt, &uk.LoggedAt)
-	if err != nil || uk.Name != usr.Name || !bytes.Equal(usr.Password, uk.Password) {
-		//fmt.Println("Cannot find user")
+	if err != nil || uk.Name != usr.Name || usr.Password != uk.Password {
+		fmt.Println(uk.Password)
 		return err, false
 	}
 	return nil, true

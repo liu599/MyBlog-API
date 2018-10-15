@@ -2,6 +2,7 @@ package test
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -26,6 +27,10 @@ import (
 
 var db *sqlx.DB
 
+var Pass_gen = "000000"
+
+var Neko_token = "4a2c4b"
+
 func ensureTableExists(db *sqlx.DB) {
 	if _, err := db.Exec(userTableCreationQuery); err != nil {
 		log.Fatal(err)
@@ -43,9 +48,9 @@ func ensureTableExists(db *sqlx.DB) {
 
 func TestMain(m *testing.M) {
 
-	os.Setenv("PASS_GEN", "wwwww")
+	os.Setenv("PASS_GEN", Pass_gen)
 
-	os.Setenv("NEKO_TOKEN", "wwww")
+	os.Setenv("NEKO_TOKEN", Neko_token)
 
 	database := data.Database{
 		Driver: "mysql",
@@ -206,8 +211,6 @@ func insertPost(db *sqlx.DB) {
 	}
 }
 
-
-
 func TestFetchCategories(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertCategories(db)
@@ -300,10 +303,16 @@ func TestCreateComment(t *testing.T) {
 	fmt.Println(response.Body)
 }
 
+var usrr = "eddie32"
+
+var pwdd = "safdafasd"
 
 func insertUser(db *sqlx.DB) {
-	dk, _ := scrypt.Key([]byte("wwwwww"), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
-	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%v', '%d', '%d')", bson.NewObjectId().Hex(), "tokeiwwwww", dk, "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
+	fmt.Println(pwdd)
+	fmt.Println(os.Getenv("PASS_GEN"))
+	dk, _ := scrypt.Key([]byte(pwdd), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
+	fmt.Println(dk, base64.StdEncoding.EncodeToString(dk))
+	statement := fmt.Sprintf("INSERT INTO user (userid, name, password, mail, createdAt, loggedAt) VALUES('%s', '%s', '%s','%s', '%d', '%d')", bson.NewObjectId().Hex(), usrr, base64.StdEncoding.EncodeToString(dk), "xxxs@qq.com", time.Now().Unix(), time.Now().Unix())
 	_, err := db.Exec(statement)
 
 	if err != nil {
@@ -311,12 +320,13 @@ func insertUser(db *sqlx.DB) {
 		fmt.Println("Database error")
 	}
 }
+
 func TestAuth(t *testing.T) {
-	//db, _ := _func.MySqlGetDB("nekohand")
-	//insertUser(db)
+	db, _ := _func.MySqlGetDB("nekohand")
+	insertUser(db)
 	form := url.Values{}
-	form.Add("username", "tokei")
-	form.Add("password", "!7d4a3eEDDIE")
+	form.Add("username", usrr)
+	form.Add("password", pwdd)
 	req, _ := http.NewRequest("POST", "/v2/backend/token.get", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
@@ -334,14 +344,26 @@ func TestAuth(t *testing.T) {
 		return
 	}
 
-	if body := fmt.Sprintf("%v", responseBody.API_TOKEN); body != "[]" {
-		req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.create", nil)
+
+	if body := fmt.Sprintf("%v", responseBody.API_TOKEN); body != "" {
+		var p data.Post
+		p.Body = "ajdkflajsdlkfja"
+		p.Password = "afhdasdfjasdf"
+		p.Author = usrr
+		p.Slug = "sajdkfasjlfdsa"
+		p.PTitle = "asdfasfasdfas"
+		p.Category = "5b6c42a95c964c0eb4896fe9"
+		p.Status = "Public"
+		mp, _ := json.Marshal(p)
+		req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.create", bytes.NewBuffer(mp))
 		req2.Header.Set("Authorization", body)
-		req2.Header.Set("User", "tokeiwwwwwwww")
-		req2.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		req2.Header.Set("User", usrr)
+		req2.Header.Add("Content-Type", "application/json")
 		response2 := executeRequest(req2)
 		fmt.Println(response2.Body)
 		//t.Errorf("Expected an empty array. Got %s", body)
+	} else {
+		t.Errorf("Error Generate Token")
 	}
 
 }
