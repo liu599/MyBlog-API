@@ -13,6 +13,25 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+func FindPost(p data.Post) (error, bool) {
+	var ac int
+	statement := fmt.Sprintf("select count(pid) from post where poid = '%s'", p.Id)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		fmt.Printf("Error Database Connection %v", err)
+		return err, false
+	}
+
+	err = db.QueryRow(statement).Scan(&ac)
+
+	if err != nil {
+		fmt.Printf("Fail to execute sql query %v", err)
+		return err, false
+	}
+
+	return nil, ac > 0
+}
+
 func CreatePost(p data.Post) (error, string) {
 
 	id := bson.NewObjectId().Hex()
@@ -39,14 +58,15 @@ func CreatePost(p data.Post) (error, string) {
 }
 
 func UpdatePost(post data.Post) error {
-	timestamp := time.Now().Unix()
 
-	post.ModifiedAt = timestamp
+	_, pp := PostFetchOne(post.Id)
+
+	post.ModifiedAt = time.Now().Unix()
 
 	post.Body = template.HTMLEscapeString(post.Body)
 
-	statement := fmt.Sprintf("UPDATE post SET ptitle='%s', slug='%s', category='%s', author='%s', body='%s', password='%s', createdAt='%d', modifiedAt='%d' WHERE poid=%s",
-		post.PTitle, post.Slug, post.Category, post.Author, post.Body, post.Password, post.CreatedAt, post.ModifiedAt, post.Id)
+	statement := fmt.Sprintf("UPDATE post SET ptitle='%s', slug='%s', category='%s', author='%s', body='%s', password='%s', createdAt='%d', modifiedAt='%d' WHERE poid='%s'",
+		post.PTitle, post.Slug, post.Category, pp.Author, post.Body, post.Password, pp.CreatedAt, post.ModifiedAt, post.Id)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -63,8 +83,9 @@ func UpdatePost(post data.Post) error {
 	return err
 }
 
-func DeletePost(id string) error {
-	statement := fmt.Sprintf("DELETE FROM post WHERE poid=%d", id)
+func PostDelete(id string) error {
+	statement := fmt.Sprintf("DELETE FROM post WHERE poid='%s'", id)
+	fmt.Println(statement)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
 		fmt.Println("Error Database Connection")

@@ -322,8 +322,8 @@ func insertUser(db *sqlx.DB) {
 }
 
 func TestAuth(t *testing.T) {
-	db, _ := _func.MySqlGetDB("nekohand")
-	insertUser(db)
+	//db, _ := _func.MySqlGetDB("nekohand")
+	//insertUser(db)
 	form := url.Values{}
 	form.Add("username", usrr)
 	form.Add("password", pwdd)
@@ -346,22 +346,45 @@ func TestAuth(t *testing.T) {
 
 
 	if body := fmt.Sprintf("%v", responseBody.API_TOKEN); body != "" {
-		var p data.Post
-		p.Body = "ajdkflajsdlkfja"
-		p.Password = "afhdasdfjasdf"
-		p.Author = usrr
-		p.Slug = "sajdkfasjlfdsa"
-		p.PTitle = "asdfasfasdfas"
-		p.Category = "5b6c42a95c964c0eb4896fe9"
-		p.Status = "Public"
-		mp, _ := json.Marshal(p)
-		req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.create", bytes.NewBuffer(mp))
-		req2.Header.Set("Authorization", body)
-		req2.Header.Set("User", usrr)
-		req2.Header.Add("Content-Type", "application/json")
-		response2 := executeRequest(req2)
-		fmt.Println(response2.Body)
+		//var p data.Post
+		//p.Id = "5bc76af45c964c2e0c24109b"
+		//p.Body = "xin"
+		//p.Password = "wwwwwwwwwww"
+		//p.Author = usrr
+		//p.Slug = "abcdefg"
+		//p.PTitle = "abasdfaasfasdfasfg"
+		//p.Category = "5b6c42a95c964c0eb4896fe9"
+		//p.Status = "Public"
+		//mp, _ := json.Marshal(p)
+		//req2, _ := http.NewRequest("POST", "/v2/backend/auth/post.edit", bytes.NewBuffer(mp))
+		//req2.Header.Set("Authorization", body)
+		//req2.Header.Set("User", usrr)
+		//req2.Header.Add("Content-Type", "application/json")
+		//response2 := executeRequest(req2)
+		//fmt.Println(response2.Body)
+
+		//form := url.Values{}
+		//form.Add("cid", "5bc7783a5c964c0740013f62")
+		//req3, _ := http.NewRequest("POST", "/v2/backend/auth/category.delete", strings.NewReader(form.Encode()))
+		//req3.Header.Set("Authorization", body)
+		//req3.Header.Set("User", usrr)
+		//req3.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		//response3 := executeRequest(req3)
+		//fmt.Println(response3.Body)
 		//t.Errorf("Expected an empty array. Got %s", body)
+
+		var ccc data.Category
+		ccc.Id = "5bc77b7f5c964c2fb0ccdc27"
+		ccc.CName = "asdfsadfafEDDSAFDFDASFsdfdfedda"
+		ccc.CLink = "aaDASFs"
+		ccc.CInfo = "adfaDAFSADFsf"
+		mp5, _ := json.Marshal(ccc)
+		req4, _ := http.NewRequest("POST", "/v2/backend/auth/category.edit", bytes.NewBuffer(mp5))
+		req4.Header.Set("Authorization", body)
+		req4.Header.Set("User", usrr)
+		req4.Header.Add("Content-Type", "application/json")
+		response4 := executeRequest(req4)
+		fmt.Println(response4.Body)
 	} else {
 		t.Errorf("Error Generate Token")
 	}

@@ -10,13 +10,34 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func CreateCategory(category data.Category) (error, string) {
+func FindCategory(p data.Category) (error, bool) {
+	var ac int
+	statement := fmt.Sprintf("select count(cid) from category where id = '%s'", p.Id)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		fmt.Printf("Error Database Connection %v", err)
+		return err, false
+	}
+
+	err = db.QueryRow(statement).Scan(&ac)
+
+	if err != nil {
+		fmt.Printf("Fail to execute sql query %v", err)
+		return err, false
+	}
+
+	return nil, ac > 0
+}
+
+func CategoryCreate(category data.Category) (error, string) {
 
 
 	id := bson.NewObjectId().Hex()
 
 	statement := fmt.Sprintf("INSERT INTO category (id, cname, clink, cinfo) VALUES ('%s', '%s', '%s', '%s')",
-		id, category.CID, category.CInfo, category.CLink)
+		id, category.CName, category.CLink, category.CInfo)
+
+	fmt.Println(statement)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -33,19 +54,19 @@ func CreateCategory(category data.Category) (error, string) {
 	return nil, id
 }
 
-func UpdateCategory(category data.Category) (error, string) {
-	statement := fmt.Sprintf("UPDATE category SET cname='%s', clink='%s', cinfo='%s' WHERE id='%s'",
-		category.CName, category.CInfo, category.Id)
+func CategoryUpdate(category data.Category) (error) {
+	statement := fmt.Sprintf("UPDATE category SET cname='%s', cinfo='%s' WHERE id='%s'",
+		category.CName, category.CInfo,  category.Id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
 		fmt.Println("Error Database Connection")
-		return err, ""
+		return err
 	}
 	_, err = db.Exec(statement)
 	if err != nil {
-		return err, category.Id
+		return err
 	}
-	return nil, category.Id
+	return nil
 }
 
 func FetchCategoryList() (error, []data.Category) {
@@ -92,6 +113,11 @@ func FetchOneCategory(id string) (error, data.Category) {
 }
 
 func DeleteCategory(id string) error {
+	err, eflag := FindCategory(data.Category{Id: id})
+	if eflag != true {
+		fmt.Println("Cannot find category")
+		return err
+	}
 	// 删除一级分类
 	statement := fmt.Sprintf("DELETE FROM category WHERE id='%s'", id)
 	db, err := _func.MySqlGetDB("nekohand")
@@ -103,5 +129,6 @@ func DeleteCategory(id string) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

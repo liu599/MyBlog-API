@@ -17,7 +17,10 @@ func AssignBackendRouter(engine *gin.Engine) {
 	/*auth*/
 	routerGroup.Handle("POST", "token.get", controller.TokenGen)
 	/*manage*/
-	routerGroup.Handle("POST", "auth/post.create", controller.PostCreation)
+	routerGroup.Handle("POST", "auth/post.edit", controller.PostEdit)
+	routerGroup.Handle("POST", "auth/post.delete", controller.PostDelete)
+	routerGroup.Handle("POST", "auth/category.edit", controller.CategoriesEdit)
+	routerGroup.Handle("POST", "auth/category.delete", controller.CategoriesDelete)
 	/*categories*/
 	routerGroup.Handle("GET", "categories", controller.CategoriesFetch)
 	/*posts*/

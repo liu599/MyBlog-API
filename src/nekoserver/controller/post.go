@@ -83,7 +83,7 @@ func PostsChornology(context *gin.Context) {
 	_func.Respond(context, http.StatusOK, mk)
 }
 
-func PostCreation(context *gin.Context) {
+func PostEdit(context *gin.Context) {
 
 	var p data.Post
 
@@ -97,15 +97,51 @@ func PostCreation(context *gin.Context) {
 
 	defer context.Request.Body.Close()
 
-	err, postId := models.CreatePost(p)
+	err, pflag := models.FindPost(p)
 
+	if pflag == true {
+
+		err = models.UpdatePost(p)
+		if err != nil {
+
+			_func.RespondError(context, http.StatusInternalServerError, data.Error{
+				Code: fmt.Sprintf("%v", err.Error()),
+				Message: "Database Error, Fail to update the post",
+			})
+			return
+		}
+		mk := make(map[string]interface{})
+		mk["data"] = "post has been updated" + bson.NewObjectId().Hex()
+		_func.Respond(context, http.StatusOK, mk)
+	} else {
+		err, postId := models.CreatePost(p)
+
+		if err != nil {
+			_func.RespondError(context, http.StatusInternalServerError, data.Error{
+				Code: "502",
+				Message: "Database Error, Fail to create the post",
+			})
+			return
+		}
+		mk := make(map[string]interface{})
+		mk["data"] = "a post"+ postId + " has been successful created " + bson.NewObjectId().Hex()
+		_func.Respond(context, http.StatusOK, mk)
+	}
+
+
+}
+
+func PostDelete(context *gin.Context) {
+	id := context.PostForm("pid")
+	err := models.PostDelete(id)
 	if err != nil {
 		_func.RespondError(context, http.StatusInternalServerError, data.Error{
-			Message: "Database Error, Fail to create the post",
+			Code: fmt.Sprintf("%v", err.Error()),
+			Message: "Database Error, Fail to update the post",
 		})
 		return
 	}
 	mk := make(map[string]interface{})
-	mk["data"] = "a post"+ postId + " has been successful created " + bson.NewObjectId().Hex()
+	mk["data"] = "Post Has Been Deleted! " + bson.NewObjectId().Hex()
 	_func.Respond(context, http.StatusOK, mk)
 }
