@@ -1,7 +1,6 @@
 package _func
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -23,6 +22,5 @@ func ArrayFilter(arr []string) ([]string) {
 		b = b + ")"
 		result2 = append(result2, b)
 	}
-	fmt.Println(result2)
 	return result2
 }

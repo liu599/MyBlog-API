@@ -21,9 +21,6 @@ func TokenGen(context *gin.Context) {
 	usr.Name = user
 	dk, _ := scrypt.Key([]byte(password), []byte(os.Getenv("PASS_GEN")), 16384, 8, 1, 32)
 	usr.Password = base64.StdEncoding.EncodeToString(dk)
-	fmt.Println(password)
-	fmt.Println(os.Getenv("PASS_GEN"))
-	fmt.Println(dk)
 	mk := make(map[string]interface{})
 	err, sign := models.TokenCheckUser(usr)
 	if err != nil {

@@ -17,7 +17,6 @@ import (
 func PostsFetch(context *gin.Context) {
 	pageNumber, _ := strconv.Atoi(context.PostForm("pageNumber"))
 	pageSize, _ := strconv.Atoi(context.PostForm("pageSize"))
-	fmt.Println(pageSize, pageNumber)
 	err, posts := models.PostsFetchAllWithPageNumber((pageNumber - 1) * pageSize, pageSize)
 	if err != nil {
 		_func.Respond(context, http.StatusBadRequest, gin.H{"error": err})
@@ -133,15 +132,17 @@ func PostEdit(context *gin.Context) {
 
 func PostDelete(context *gin.Context) {
 	id := context.PostForm("pid")
-	err := models.PostDelete(id)
-	if err != nil {
-		_func.RespondError(context, http.StatusInternalServerError, data.Error{
-			Code: fmt.Sprintf("%v", err.Error()),
-			Message: "Database Error, Fail to update the post",
+	flag := models.PostDelete(id)
+	if flag == false {
+		_func.RespondError(context, http.StatusBadRequest, data.Error{
+			Code: fmt.Sprintf("%v", "Probably wrong Id"),
+			Message: "Database Error, Fail to delete the post",
 		})
 		return
+	} else {
+		mk := make(map[string]interface{})
+		mk["data"] = "Post Has Been Deleted! " + bson.NewObjectId().Hex()
+		_func.Respond(context, http.StatusOK, mk)
 	}
-	mk := make(map[string]interface{})
-	mk["data"] = "Post Has Been Deleted! " + bson.NewObjectId().Hex()
-	_func.Respond(context, http.StatusOK, mk)
+
 }

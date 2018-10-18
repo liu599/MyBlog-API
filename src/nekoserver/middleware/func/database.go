@@ -20,7 +20,6 @@ func AssignDatabaseFromList(nameList []string) {
 	if AppDatabase == nil {
 		AppDatabase = map[string]data.Database{}
 	}
-	fmt.Println(AppDatabase)
 
 	for k, v := range AppDatabase {
 		for _, w := range nameList {
@@ -37,8 +36,6 @@ func AssignMySQL(name string, database data.Database) {
 	mysql, err := sqlx.Connect(database.Driver, database.Source)
 
 	if err != nil {
-		fmt.Println(database.Source)
-		fmt.Println(err)
 		log.Fatal(err)
 		panic(err)
 	}

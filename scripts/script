@@ -84,6 +84,9 @@ supervisord -c /etc/supervisor/supervisord.conf
 supervisorctl stop blogserver2
 supervisorctl start blogserver2
 supervisorctl restart blogserver2
+supervisorctl stop shadowsocks
+supervisorctl start shadowsocks
+supervisorctl restart shadowsocks
 supervisorctl update
 38s to built
 

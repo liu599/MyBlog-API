@@ -18,14 +18,12 @@ func FindPost(p data.Post) (error, bool) {
 	statement := fmt.Sprintf("select count(pid) from post where poid = '%s'", p.Id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Printf("Error Database Connection %v", err)
 		return err, false
 	}
 
 	err = db.QueryRow(statement).Scan(&ac)
 
 	if err != nil {
-		fmt.Printf("Fail to execute sql query %v", err)
 		return err, false
 	}
 
@@ -41,14 +39,12 @@ func CreatePost(p data.Post) (error, string) {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Printf("Error Database Connection %v", err)
 		return err, ""
 	}
 
 	_, err = db.Exec(statement)
 
 	if err != nil {
-		fmt.Printf("Fail to execute sql query %v", err)
 		return err, ""
 	}
 
@@ -70,7 +66,6 @@ func UpdatePost(post data.Post) error {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err
 	}
 
@@ -83,24 +78,24 @@ func UpdatePost(post data.Post) error {
 	return err
 }
 
-func PostDelete(id string) error {
+func PostDelete(id string) bool {
 	statement := fmt.Sprintf("DELETE FROM post WHERE poid='%s'", id)
-	fmt.Println(statement)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
-		return err
+		return false
 	}
-	_, err = db.Exec(statement)
-	return err
+	res, err := db.Exec(statement)
+	num, err := res.RowsAffected()
+	if err != nil {
+		return false
+	}
+	return num > 0
 }
 
 func PostsFetchChronology() (error, []string) {
 	statement := fmt.Sprintf("select DATE_FORMAT(FROM_UNIXTIME(`createdAt`), '%s') from post ORDER BY `createdAt` ASC", "%Y%m")
-	fmt.Println(statement)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, nil
 	}
 	rows, err := db.Query(statement)
@@ -115,7 +110,6 @@ func PostsFetchChronology() (error, []string) {
 	}
 	ret = _func.ArrayFilter(ret)
 	if err != nil {
-		fmt.Println("Failure to get chronology")
 		return err, nil
 	}
 	return nil, ret
@@ -129,7 +123,6 @@ func PostsFetchTotalNumber() (error, int) {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, -25252
 	}
 
@@ -151,7 +144,6 @@ func PostsFetchTotalNumberByCategory(id string) (error, int) {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, -25252
 	}
 
@@ -170,7 +162,6 @@ func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
 	}
 	rows, err := db.Query(statement)
 	if err != nil {
-		fmt.Println(err)
 		return err, []data.Post{}
 	}
 	posts := []data.Post{}
@@ -198,7 +189,6 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 	}
 	rows, err := db.Query(statement)
 	if err != nil {
-		fmt.Println(err)
 		return err, []data.Post{}
 	}
 	posts := []data.Post{}
@@ -220,10 +210,8 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 
 func PostFetchOne(id string) (error, data.Post) {
 	statement := fmt.Sprintf("SELECT * FROM post left join category on post.category=category.id WHERE poid='%s'", id)
-	fmt.Println(statement)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, data.Post{}
 	}
 	var p data.Post
@@ -231,6 +219,7 @@ func PostFetchOne(id string) (error, data.Post) {
 	var nulString sql.NullString
 	err = db.QueryRow(statement).Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString)
 	p.Category = cc.CName
+	p.Body = html.UnescapeString(p.Body)
 	_, cmNum := CommentsFetchNumber(p.Id)
 	p.Comment = cmNum
 	if err != nil {

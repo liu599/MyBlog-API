@@ -1,7 +1,6 @@
 package _func
 
 import (
-	"fmt"
 
 	"nekoserver/middleware/data"
 
@@ -14,7 +13,6 @@ func Respond(context *gin.Context, code int, data ...map[string]interface{}) {
 	res := gin.H{}
 
 	for _, v := range data {
-		fmt.Println(v)
 		for k, m := range v {
 			switch t:=m.(type) {
 			default:

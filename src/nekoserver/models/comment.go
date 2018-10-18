@@ -14,7 +14,6 @@ func deleteComment(id string) error {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err
 	}
 
@@ -38,7 +37,6 @@ func CommentCreate(co data.Comment) error {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err
 	}
 
@@ -52,7 +50,6 @@ func CommentsFetch(id string) (error, []data.Comment) {
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, nil
 	}
 
@@ -78,7 +75,6 @@ func CommentsFetchNumber(id string) (error, int) {
 	statement := fmt.Sprintf("SELECT COUNT(commentid) FROM comment WHERE pid='%s'", id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, -25252
 	}
 

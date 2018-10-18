@@ -13,7 +13,6 @@ import (
 
 func CommentsFetch(context *gin.Context) {
 	id := context.Param("pid")
-	fmt.Println(id)
 	err, comments := models.CommentsFetch(id)
 	if err != nil {
 		_func.Respond(context, http.StatusBadRequest, gin.H{"error": err})
@@ -32,8 +31,10 @@ func CommentCreation(context *gin.Context) {
 
 	decoder := json.NewDecoder(context.Request.Body)
 	if err := decoder.Decode(&co); err != nil {
-		fmt.Sprintf("%v", err)
-		_func.RespondError(context, http.StatusBadRequest, data.Error{})
+		_func.RespondError(context, http.StatusBadRequest, data.Error{
+			Code: "401",
+			Message: fmt.Sprintf("%v", err),
+		})
 		return
 	}
 

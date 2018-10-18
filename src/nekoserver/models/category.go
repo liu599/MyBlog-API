@@ -11,22 +11,21 @@ import (
 )
 
 func FindCategory(p data.Category) (error, bool) {
-	var ac int
 	statement := fmt.Sprintf("select count(cid) from category where id = '%s'", p.Id)
+
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Printf("Error Database Connection %v", err)
 		return err, false
 	}
 
-	err = db.QueryRow(statement).Scan(&ac)
-
+	res, err := db.Exec(statement)
+	num, err := res.RowsAffected()
 	if err != nil {
 		fmt.Printf("Fail to execute sql query %v", err)
 		return err, false
 	}
 
-	return nil, ac > 0
+	return nil, num > 0
 }
 
 func CategoryCreate(category data.Category) (error, string) {
@@ -59,7 +58,6 @@ func CategoryUpdate(category data.Category) (error) {
 		category.CName, category.CInfo,  category.Id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err
 	}
 	_, err = db.Exec(statement)
@@ -73,7 +71,6 @@ func FetchCategoryList() (error, []data.Category) {
 	statement := fmt.Sprintf("SELECT * FROM `category`")
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, []data.Category{}
 	}
 	var categoryList []data.Category
@@ -102,7 +99,6 @@ func FetchOneCategory(id string) (error, data.Category) {
 	statement := fmt.Sprintf("SELECT * FROM `category` WHERE id='%s'", id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
 		return err, data.Category{}
 	}
 	err = db.QueryRow(statement).Scan(&category.CID, &category.Id, &category.CName, &category.CInfo, &category.CLink)
@@ -112,23 +108,30 @@ func FetchOneCategory(id string) (error, data.Category) {
 	return nil, category
 }
 
-func DeleteCategory(id string) error {
-	err, eflag := FindCategory(data.Category{Id: id})
+func DeleteCategory(id string) data.Error {
+	_, eflag := FindCategory(data.Category{Id: id})
 	if eflag != true {
 		fmt.Println("Cannot find category")
-		return err
+		return data.Error{
+			Code: "401",
+			Message: "Fail to find the category, probably wrong id!",
+		}
 	}
-	// 删除一级分类
 	statement := fmt.Sprintf("DELETE FROM category WHERE id='%s'", id)
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
-		fmt.Println("Error Database Connection")
-		return err
+		return data.Error{
+			Code: "502",
+			Message: "Error Database Connection",
+		}
 	}
 	_, err = db.Exec(statement)
 	if err != nil {
-		return err
+		return data.Error{
+			Code: "502",
+			Message: "Error Database Connection",
+		}
 	}
 
-	return nil
+	return data.Error{}
 }

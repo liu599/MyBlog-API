@@ -83,14 +83,13 @@ func CategoriesEdit(context *gin.Context) {
 func CategoriesDelete(context *gin.Context) {
 	id := context.PostForm("cid")
 	err := models.DeleteCategory(id)
-	if err != nil {
-		_func.RespondError(context, http.StatusInternalServerError, data.Error{
-			Code: fmt.Sprintf("%v", err.Error()),
-			Message: "Database Error, Fail to update the category",
-		})
+	if err.Message != "" {
+		_func.RespondError(context, http.StatusInternalServerError, err)
 		return
+	} else {
+		mk := make(map[string]interface{})
+		mk["data"] = "Category Has Been Deleted! " + bson.NewObjectId().Hex()
+		_func.Respond(context, http.StatusOK, mk)
 	}
-	mk := make(map[string]interface{})
-	mk["data"] = "Category Has Been Deleted! " + bson.NewObjectId().Hex()
-	_func.Respond(context, http.StatusOK, mk)
+
 }

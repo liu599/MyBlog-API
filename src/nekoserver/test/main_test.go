@@ -364,27 +364,35 @@ func TestAuth(t *testing.T) {
 		//fmt.Println(response2.Body)
 
 		//form := url.Values{}
-		//form.Add("cid", "5bc7783a5c964c0740013f62")
+		//form.Add("cid", "5bc77a445c964c284c07adcd")
 		//req3, _ := http.NewRequest("POST", "/v2/backend/auth/category.delete", strings.NewReader(form.Encode()))
 		//req3.Header.Set("Authorization", body)
 		//req3.Header.Set("User", usrr)
 		//req3.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		//response3 := executeRequest(req3)
 		//fmt.Println(response3.Body)
-		//t.Errorf("Expected an empty array. Got %s", body)
 
-		var ccc data.Category
-		ccc.Id = "5bc77b7f5c964c2fb0ccdc27"
-		ccc.CName = "asdfsadfafEDDSAFDFDASFsdfdfedda"
-		ccc.CLink = "aaDASFs"
-		ccc.CInfo = "adfaDAFSADFsf"
-		mp5, _ := json.Marshal(ccc)
-		req4, _ := http.NewRequest("POST", "/v2/backend/auth/category.edit", bytes.NewBuffer(mp5))
-		req4.Header.Set("Authorization", body)
-		req4.Header.Set("User", usrr)
-		req4.Header.Add("Content-Type", "application/json")
-		response4 := executeRequest(req4)
-		fmt.Println(response4.Body)
+		form := url.Values{}
+		form.Add("pid", "5b6c46f25c964c0784be5c22")
+		req3, _ := http.NewRequest("POST", "/v2/backend/auth/post.delete", strings.NewReader(form.Encode()))
+		req3.Header.Set("Authorization", body)
+		req3.Header.Set("User", usrr)
+		req3.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+		response3 := executeRequest(req3)
+		fmt.Println(response3.Body)
+
+		//var ccc data.Category
+		//ccc.Id = "5bc77b7f5c964c2fb0ccdc27"
+		//ccc.CName = "asdfsadfafEDDSAFDFDASFsdfdfedda"
+		//ccc.CLink = "aaDASFs"
+		//ccc.CInfo = "adfaDAFSADFsf"
+		//mp5, _ := json.Marshal(ccc)
+		//req4, _ := http.NewRequest("POST", "/v2/backend/auth/category.edit", bytes.NewBuffer(mp5))
+		//req4.Header.Set("Authorization", body)
+		//req4.Header.Set("User", usrr)
+		//req4.Header.Add("Content-Type", "application/json")
+		//response4 := executeRequest(req4)
+		//fmt.Println(response4.Body)
 	} else {
 		t.Errorf("Error Generate Token")
 	}

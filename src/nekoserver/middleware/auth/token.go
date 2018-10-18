@@ -68,7 +68,6 @@ func GenerateToken(username string, environmentVariable string) (string, error) 
 	//fmt.Printf("\n%v\n", tokenString)
 
 	if err != nil {
-		fmt.Println("error in convert tokenString")
 		return "Cannot convert secret string", err
 	}
 
