@@ -98,7 +98,6 @@ CREATE TABLE IF NOT EXISTS user
 	createdAt  INT(64)  NOT NULL,
 	loggedAt   INT(64) NOT NULL
 ) character set = utf8`
-
 const postTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS post
 (
@@ -113,16 +112,13 @@ CREATE TABLE IF NOT EXISTS post
 	createdAt  INT(64)  NOT NULL,
 	modifiedAt   INT(64) NOT NULL
 ) character set = utf8`
-
-const categoryTableCreationQuery = `
-CREATE TABLE IF NOT EXISTS category
+const categoryTableCreationQuery = `CREATE TABLE IF NOT EXISTS category
 (
     cid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     id         VARCHAR(50) UNIQUE NOT NULL,
 	cname	   VARCHAR(50) UNIQUE NOT NULL,
 	cinfo     VARCHAR(32) NULL
 ) character set = utf8`
-
 const commentTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS comment
 (
@@ -139,7 +135,6 @@ CREATE TABLE IF NOT EXISTS comment
 	modifiedAt INT(64) NOT NULL
 ) character set = utf8`
 
-
 // 发送请求
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
@@ -149,6 +144,7 @@ func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 
 	// Router
 	router.AssignBackendRouter(engine)
+	router.AssignFrontendRouter(engine)
 	engine.ServeHTTP(rr, req)
 
 	return rr
@@ -163,7 +159,7 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 func TestEmptyTable(t *testing.T) {
 	// clearTable(db)
 	form := url.Values{}
-	req, _ := http.NewRequest("GET", "/v2/backend/status", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("GET", "/v2/frontend/status", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
@@ -214,8 +210,9 @@ func insertPost(db *sqlx.DB) {
 func TestFetchCategories(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertCategories(db)
-	fmt.Println("123456")
-	req, _ := http.NewRequest("GET", "/v2/backend/categories", nil)
+	//fmt.Println("123456")
+	t.Skipped()
+	req, _ := http.NewRequest("GET", "/v2/frontend/categories", nil)
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }
@@ -223,40 +220,41 @@ func TestFetchCategories(t *testing.T) {
 func TestFetchPosts(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertPost(db)
+	t.Skipped()
 	form := url.Values{}
 	fmt.Println(bson.NewObjectId().Hex(), "ID")
-	form.Add("token", "0003020")
 	form.Add("pageNumber",  "1")
 	form.Add("pageSize", "10")
-	req, _ := http.NewRequest("POST", "/v2/backend/posts", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("POST", "/v2/frontend/posts", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }
 
 func TestFetchOnePost(t *testing.T) {
+	t.Skipped()
 	form := url.Values{}
-	req, _ := http.NewRequest("POST", "/v2/backend/post/5b6c42b25c964c10a4c68d19", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("POST", "/v2/frontend/post/5b6c42b25c964c10a4c68d19", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }
 
 func TestFetchPostsByCategory(t *testing.T) {
+	t.Skipped()
 	form := url.Values{}
-	form.Add("token", "0003020")
 	form.Add("pageNumber",  "1")
 	form.Add("pageSize", "10")
-	form.Add("category", "5b6c42b25c964c10a4c68d1a")
-	req, _ := http.NewRequest("POST", "/v2/backend/posts/5b6c42b25c964c10a4c68d1a", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("POST", "/v2/frontend/posts/5b6c42b25c964c10a4c68d1a", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }
 
 func TestFetchPostsChronology(t *testing.T) {
+	t.Skipped()
 	form := url.Values{}
-	req, _ := http.NewRequest("GET", "/v2/backend/posts-chronology", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("GET", "/v2/frontend/posts-chronology", strings.NewReader(form.Encode()))
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
@@ -274,14 +272,16 @@ func insertComment(db *sqlx.DB) {
 func TestFetchComments(t *testing.T) {
 	//db, _ := _func.MySqlGetDB("nekohand")
 	//insertComment(db)
+	t.Skipped()
 	form := url.Values{}
 	form.Add("token", "0003020")
-	req, _ := http.NewRequest("POST", "/v2/backend/comments/5b6c5ced5c964c2770f66e8a", strings.NewReader(form.Encode()))
+	req, _ := http.NewRequest("POST", "/v2/frontend/comments/5b6c5ced5c964c2770f66e8a", strings.NewReader(form.Encode()))
 	response := executeRequest(req)
 	fmt.Println(response.Body)
 }
 
 func TestCreateComment(t *testing.T) {
+	t.Skipped()
 	comet := &data.Comment{}
 	comet.COMID = bson.NewObjectId().Hex()
 	comet.PID = "5b72f09a5c964c32f078402c"
@@ -297,7 +297,7 @@ func TestCreateComment(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	req, _ := http.NewRequest("POST", "/v2/backend/c2a5cc3b070", bytes.NewBuffer(jsonStr))
+	req, _ := http.NewRequest("POST", "/v2/frontend/c2a5cc3b070", bytes.NewBuffer(jsonStr))
 	req.Header.Add("Content-Type", "application/json")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
@@ -375,8 +375,8 @@ func TestAuth(t *testing.T) {
 		form := url.Values{}
 		form.Add("pid", "5b6c46f25c964c0784be5c22")
 		req3, _ := http.NewRequest("POST", "/v2/backend/auth/post.delete", strings.NewReader(form.Encode()))
-		req3.Header.Set("Authorization", body)
-		req3.Header.Set("User", usrr)
+		//req3.Header.Set("Authorization", body)
+		//req3.Header.Set("User", usrr)
 		req3.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		response3 := executeRequest(req3)
 		fmt.Println(response3.Body)
@@ -396,5 +396,13 @@ func TestAuth(t *testing.T) {
 	} else {
 		t.Errorf("Error Generate Token")
 	}
+}
 
+func TestFetchPostByTime(t *testing.T) {
+	form := url.Values{}
+	form.Add("t", "1533821000")
+	req4, _ := http.NewRequest("POST", "/v2/frontend/po/t", strings.NewReader(form.Encode()))
+	req4.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	response4 := executeRequest(req4)
+	fmt.Println(response4.Body)
 }

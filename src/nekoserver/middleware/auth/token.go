@@ -24,9 +24,8 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			} else {
 				requestUser, ok := c.Request.Header["User"]
 				if !ok {
-					requestUser[0] = "_"
+					requestUser = []string{"_"}
 				}
-				//fmt.Println(requestUser, "requestUser")
 				tokenRequest, err := request.ParseFromRequest(c.Request, request.AuthorizationHeaderExtractor,
 					func(token *jwt.Token) (interface{}, error) {
 						return []byte(requestUser[0] + salt), nil

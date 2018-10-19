@@ -29,6 +29,7 @@ type (
 		ModifiedAt int64  `json:"modifiedAt"`
 		Plink      string `json:"plink"`
 		Comment    int    `json:"comment"`
+		Cid        string `json:"cid"`
 	}
 	Pager struct {
 		PageNum         int `json:"pageNum"`

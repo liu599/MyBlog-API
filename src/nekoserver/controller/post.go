@@ -19,7 +19,9 @@ func PostsFetch(context *gin.Context) {
 	pageSize, _ := strconv.Atoi(context.PostForm("pageSize"))
 	err, posts := models.PostsFetchAllWithPageNumber((pageNumber - 1) * pageSize, pageSize)
 	if err != nil {
-		_func.Respond(context, http.StatusBadRequest, gin.H{"error": err})
+		_func.RespondError(context, http.StatusBadRequest, data.Error{
+				Message: fmt.Sprintf("%v", err.Error()),
+		})
 		return
 	}
 	mk := make(map[string]interface{})
@@ -145,4 +147,22 @@ func PostDelete(context *gin.Context) {
 		_func.Respond(context, http.StatusOK, mk)
 	}
 
+}
+
+func PostsFetchByTime(context *gin.Context) {
+	t, err := strconv.ParseInt(context.PostForm("t"), 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	err, posts := models.PostListByTime(t)
+	if err != nil {
+		_func.RespondError(context, http.StatusBadRequest, data.Error{
+			Code: fmt.Sprintf("%v", "Probably wrong request"),
+			Message: "Database Error, Fail to fetch the posts",
+		})
+		panic(err)
+	}
+	mk := make(map[string]interface{})
+	mk["data"] = posts
+	_func.Respond(context, http.StatusOK, mk)
 }

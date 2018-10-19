@@ -92,6 +92,39 @@ func PostDelete(id string) bool {
 	return num > 0
 }
 
+func PostListByTime(t int64) (error, []data.Post) {
+	statement := fmt.Sprintf("select * from post left join category on post.category=category.id where `createdAt` between '%d' and '%d' ORDER BY `createdAt` DESC", t, t + 3600*24*30)
+	db, err := _func.MySqlGetDB("nekohand")
+	if err != nil {
+		return err, nil
+	}
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return err, []data.Post{}
+	}
+
+	posts := []data.Post{}
+
+	for rows.Next() {
+		var p data.Post
+		var cc data.Category
+		var nulString sql.NullString
+		if err = rows.Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString); err != nil {
+			return err, nil
+		}
+		p.Body = html.UnescapeString(p.Body)
+		p.Category = cc.CName
+		_, cmNum := CommentsFetchNumber(p.Id)
+		p.Comment = cmNum
+		p.Cid = cc.Id
+		posts = append(posts, p)
+	}
+	return nil, posts
+
+
+}
+
 func PostsFetchChronology() (error, []string) {
 	statement := fmt.Sprintf("select DATE_FORMAT(FROM_UNIXTIME(`createdAt`), '%s') from post ORDER BY `createdAt` ASC", "%Y%m")
 	db, err := _func.MySqlGetDB("nekohand")
@@ -176,6 +209,7 @@ func PostsFetchAllWithPageNumber(start, count int) (error, []data.Post) {
 		p.Category = cc.CName
 		_, cmNum := CommentsFetchNumber(p.Id)
 		p.Comment = cmNum
+		p.Cid = cc.Id
 		posts = append(posts, p)
 	}
 	return nil, posts
@@ -203,6 +237,7 @@ func PostsFetchCategoryWithPageNumber(start, count int, cid string) (error, []da
 		p.Category = cc.CName
 		_, cmNum := CommentsFetchNumber(p.Id)
 		p.Comment = cmNum
+		p.Cid = cc.Id
 		posts = append(posts, p)
 	}
 	return nil, posts
@@ -219,6 +254,7 @@ func PostFetchOne(id string) (error, data.Post) {
 	var nulString sql.NullString
 	err = db.QueryRow(statement).Scan(&p.PID, &p.Id, &p.Author, &p.Category, &p.Body, &p.PTitle, &p.Slug, &p.Password, &p.CreatedAt, &p.ModifiedAt, &cc.CID, &cc.Id, &cc.CName, &cc.CLink, &nulString)
 	p.Category = cc.CName
+	p.Cid = cc.Id
 	p.Body = html.UnescapeString(p.Body)
 	_, cmNum := CommentsFetchNumber(p.Id)
 	p.Comment = cmNum
