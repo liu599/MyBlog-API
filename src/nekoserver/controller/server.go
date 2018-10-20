@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"gopkg.in/mgo.v2/bson"
 	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 
@@ -17,7 +18,7 @@ func ServerStatusGet(context *gin.Context) {
 
 	m.Author = "eddie32"
 	m.PTitle = "Post Title"
-	m.Body = "exc"
+	m.Body = bson.NewObjectId().Hex()
 	m.Category = "adjfkasjflkajkdla"
 
 	pg.PageSize = 15
