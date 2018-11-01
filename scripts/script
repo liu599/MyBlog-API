@@ -67,6 +67,7 @@ cd /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release
 mkdir release && cd release
 go build /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/src/nekoserver/main.go
 mv /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/main /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/nekoserverv2
+mv /root/main /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/nekoserverv2
 /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/bin/release/nekoserverv2
 /home/wwwroot/www.blog.nekohand.moe/NekohandNewServer/scripts/server-local.sh
 

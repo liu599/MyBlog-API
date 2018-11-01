@@ -33,9 +33,13 @@ func FindPost(p data.Post) (error, bool) {
 func CreatePost(p data.Post) (error, string) {
 
 	id := bson.NewObjectId().Hex()
+	createdTime := time.Now().Unix()
+	if p.CreatedAt < time.Now().Unix() {
+		createdTime = p.CreatedAt
+	}
 
 	statement := fmt.Sprintf("INSERT INTO post (poid, author, category, body, ptitle, slug, password, createdAt, modifiedAt) VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d')",
-		id, p.Author, p.Category, p.Body, p.PTitle, p.Slug, p.Password, time.Now().Unix(), time.Now().Unix())
+		id, p.Author, p.Category, p.Body, p.PTitle, p.Slug, p.Password, createdTime, time.Now().Unix())
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {
@@ -59,10 +63,15 @@ func UpdatePost(post data.Post) error {
 
 	post.ModifiedAt = time.Now().Unix()
 
+	createdTime := pp.CreatedAt
+	if post.CreatedAt < pp.CreatedAt {
+		createdTime = post.CreatedAt
+	}
+
 	post.Body = template.HTMLEscapeString(post.Body)
 
 	statement := fmt.Sprintf("UPDATE post SET ptitle='%s', slug='%s', category='%s', author='%s', body='%s', password='%s', createdAt='%d', modifiedAt='%d' WHERE poid='%s'",
-		post.PTitle, post.Slug, post.Category, pp.Author, post.Body, post.Password, pp.CreatedAt, post.ModifiedAt, post.Id)
+		post.PTitle, post.Slug, post.Category, pp.Author, post.Body, post.Password, createdTime, post.ModifiedAt, post.Id)
 
 	db, err := _func.MySqlGetDB("nekohand")
 	if err != nil {

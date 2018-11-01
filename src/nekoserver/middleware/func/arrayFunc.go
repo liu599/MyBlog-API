@@ -1,12 +1,15 @@
 package _func
 
 import (
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func ArrayFilter(arr []string) ([]string) {
 	//result := []string{}
+	// 必须确保数组从小到大。
+	sort.Strings(arr)
 	result2 := []string{}
 	tempMap := map[string]int{}
 	for _, e := range arr {
