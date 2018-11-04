@@ -54,9 +54,7 @@ func main() {
 		AllowOriginFunc:  func(origin string) bool { return true },
 		MaxAge:           86400,
 	}))
-
-	engine.Use(static.Serve("/files/", static.LocalFile(staticRoot, true)))
-
+	
 	router.AssignBackendRouter(engine)
 
 	router.AssignFrontendRouter(engine)
