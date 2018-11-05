@@ -8,7 +8,6 @@ import (
 	"nekoserver/middleware/func"
 
 	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 
