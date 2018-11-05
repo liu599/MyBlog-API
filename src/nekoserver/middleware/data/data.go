@@ -14,6 +14,14 @@ type (
 		Message string                 `json:"message"` // 错误信息
 		Fields  map[string]interface{} `json:"fields,omitempty"`  // 错误字段信息
 	}
+	NekohandFile struct {
+		FID      int      `json:"fid"`
+		FileName string   `json:"filename"`
+		FileId   string	  `json:"fileid"`
+		HashId   string   `json:"filehash"`
+		CreatedAt  int64  `json:"createdAt"`
+		ModifiedAt int64  `json:"modifiedAt"`
+	}
 	Post struct {
 		PID      int      `json:"pid"`
 		Id       string   `json:"id"`

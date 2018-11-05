@@ -22,4 +22,6 @@ func AssignFrontendRouter(engine *gin.Engine) {
 	/*comments*/
 	routerGroup.Handle("POST", "comments/:pid", controller.CommentsFetch)
 	routerGroup.Handle("POST", "c2a5cc3b070", controller.CommentCreation)
+	/*files*/
+	routerGroup.Handle("GET", "filelist", controller.FileListFetch)
 }
