@@ -1,11 +1,15 @@
 package router
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"nekoserver/controller"
 )
 
 func AssignFrontendRouter(engine *gin.Engine) {
+	sysFilePath := os.Getenv("SERVER_FILE_PATH")
+
 	routerGroup := engine.Group("v2/frontend")
 
 	/*Server*/
@@ -24,4 +28,5 @@ func AssignFrontendRouter(engine *gin.Engine) {
 	routerGroup.Handle("POST", "c2a5cc3b070", controller.CommentCreation)
 	/*files*/
 	routerGroup.Handle("GET", "filelist", controller.FileListFetch)
+	routerGroup.Static("/files", sysFilePath)
 }
