@@ -10,6 +10,7 @@ import (
 func AssignBackendRouter(engine *gin.Engine) {
 
 	engine.Use(auth.TokenAuthMiddleware())
+	engine.Use(auth.TokenRemoteAuth())
 
 	routerGroup := engine.Group("v2/backend")
 	/*Server*/
