@@ -81,4 +81,11 @@ type (
 		CreatedAt  int64  `json:"createdAt"`
 		LoggedAt   int64  `json:"loggedAt"`
 	}
+	ResponseBody struct{
+		Code int
+		Success bool
+		Token string
+		Uid string
+		Valid bool
+	}
 )

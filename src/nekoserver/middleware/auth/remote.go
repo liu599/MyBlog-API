@@ -15,20 +15,20 @@ import (
 	"nekoserver/middleware/func"
 )
 
-type ResponseBody struct{
-	Code int
-	Success bool
-	Token string
-}
-
-
 func TokenRemoteAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		requestPath := c.Request.URL.Path
+		if !strings.Contains(requestPath, "auth") {
+			c.Next()
+			return
+		}
 		client := &http.Client{}
 		form := url.Values{}
-		form.Add("username", "tokei")
-		form.Add("password", "!7d4a3eEDDIE")
-		req, _ := http.NewRequest("POST", "http://localhost:19223/v2/auth/token.get", strings.NewReader(form.Encode()))
+		requestUid, _ :=  c.Request.Header["User"]
+		requestToken := c.PostForm("token")
+		form.Add("uid", requestUid[0])
+		form.Add("token", requestToken)
+		req, _ := http.NewRequest("POST", "http://localhost:19223/v2/auth/token.auth", strings.NewReader(form.Encode()))
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		resp, _ := client.Do(req)
 		fmt.Println(resp.StatusCode)
@@ -41,10 +41,17 @@ func TokenRemoteAuth() gin.HandlerFunc {
 			return
 		}
 		if resp.StatusCode == http.StatusOK {
-			var p ResponseBody
+			var p data.ResponseBody
 			bodyBytes, _ := ioutil.ReadAll(resp.Body)
 			json.Unmarshal(bodyBytes, &p)
-			fmt.Println(p.Token)
+			if !p.Valid {
+				_func.RespondError(c, http.StatusBadRequest,
+					data.Error{
+						Code: strconv.Itoa(e.ERROR_AUTH_CHECK_TOKEN_FAIL),
+						Message: fmt.Sprintf("%v", e.GetMsg(e.ERROR_AUTH_CHECK_TOKEN_FAIL)),
+					})
+				return
+			}
 		}
 		c.Next()
 	}
