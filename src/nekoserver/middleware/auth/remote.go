@@ -25,9 +25,9 @@ func TokenRemoteAuth() gin.HandlerFunc {
 		client := &http.Client{}
 		form := url.Values{}
 		requestUid, _ :=  c.Request.Header["User"]
-		requestToken := c.PostForm("token")
+		requestToken := c.Request.Header["Authorization"]
 		form.Add("uid", requestUid[0])
-		form.Add("token", requestToken)
+		form.Add("token", requestToken[0])
 		req, _ := http.NewRequest("POST", "http://localhost:19223/v2/auth/token.auth", strings.NewReader(form.Encode()))
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		resp, _ := client.Do(req)

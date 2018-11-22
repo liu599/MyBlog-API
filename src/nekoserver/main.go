@@ -18,7 +18,7 @@ import (
 func main() {
 
 	//gin.SetMode(gin.ReleaseMode)
-	//Configure()
+	Configure()
 	maxIdle, _ := strconv.Atoi(os.Getenv("SERVER_DB_MAX_IDLE"))
 	maxOpen, _ := strconv.Atoi(os.Getenv("SERVER_DB_MAX_OPEN"))
 	source := os.Getenv("SERVER_DB_URL")
