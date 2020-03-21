@@ -17,7 +17,7 @@ Plan to use no-sql database for all comments.
 
 ## Current Version
 
-- 2.0.0
+- 2.0.0 (2018.11.23)
 - 1.0.0 (2017.12.25)
     
 ## License
