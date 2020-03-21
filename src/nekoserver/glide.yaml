@@ -18,5 +18,8 @@ import:
   repo: https://github.com/golang/crypto.git
   subpackages:
   - bcrypt
+<<<<<<< HEAD
 - package: github.com/gin-contrib/cors
   version: ^1.2.0
+=======
+>>>>>>> nekohandserverv1/master

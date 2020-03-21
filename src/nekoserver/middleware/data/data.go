@@ -14,6 +14,7 @@ type (
 		Message string                 `json:"message"` // 错误信息
 		Fields  map[string]interface{} `json:"fields,omitempty"`  // 错误字段信息
 	}
+<<<<<<< HEAD
 	Post struct {
 		PID      int    `json:"pid"`
 		PTitle   string `json:"title"`
@@ -26,6 +27,32 @@ type (
 		Password string `json:"password"`
 		Created  int64  `json:"created"`
 		Modified int64  `json:"modified"`
+=======
+	NekohandFile struct {
+		FID      int      `json:"fid"`
+		FileName string   `json:"filename"`
+		FileId   string	  `json:"fileid"`
+		HashId   string   `json:"filehash"`
+		CreatedAt  int64  `json:"createdAt"`
+		ModifiedAt int64  `json:"modifiedAt"`
+	}
+	Post struct {
+		PID      int      `json:"pid"`
+		Id       string   `json:"id"`
+		PTitle   string   `json:"title"`
+		Slug     string   `json:"slug"`
+		Category string   `json:"category"`
+		Template int      `json:"template"`
+		Status   string   `json:"status"`
+		Author   string   `json:"author"`
+		Body     string   `json:"body"`
+		Password string   `json:"password"`
+		CreatedAt  int64  `json:"createdAt"`
+		ModifiedAt int64  `json:"modifiedAt"`
+		Plink      string `json:"plink"`
+		Comment    int    `json:"comment"`
+		Cid        string `json:"cid"`
+>>>>>>> nekohandserverv1/master
 	}
 	Pager struct {
 		PageNum         int `json:"pageNum"`
@@ -33,6 +60,7 @@ type (
 		TotalNumber     int `json:"total"`
 	}
 	Comment struct {
+<<<<<<< HEAD
 		COID    int `json:"coid"`
 		PID     int `json:"pid"`
 		Created int64 `json:"created"`
@@ -47,6 +75,25 @@ type (
 	Category struct {
 		CID   int `json:"cid"`
 		CName string `json:"cname"`
+=======
+		COID    int    `json:"comid"`
+		COMID   string `json:"commentid"`
+		PID     string `json:"pid"`
+		Author  string `json:"author"`
+		Mail    string `json:"mail"`
+		Url     string `json:"url"`
+		Ip      string `json:"ip"`
+		Prid  string `json:"prid"` // Parent ID
+		Body    string `json:"body"`
+		CreatedAt int64 `json:"created"`
+		ModifiedAt int64  `json:"modifiedAt"`
+	}
+	Category struct {
+		CID   int `json:"cid"`
+		Id    string `json:"id"`
+		CName string `json:"cname"`
+		CLink string `json:"clink"`
+>>>>>>> nekohandserverv1/master
 		CInfo string `json:"cinfo"`
 	}
 	UserDetail struct {
@@ -59,10 +106,26 @@ type (
 	}
 	User struct {
 		UID      int    `json:"uid"`
+<<<<<<< HEAD
 		Name     string `json:"name"`
 		Password string `json:"password"`
 		Mail     string `json:"mail"`
 		Created  int64  `json:"created"`
 		Logged   int64  `json:"logged"`
+=======
+		USID     string `json:"usid"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
+		Mail     string `json:"mail"`
+		CreatedAt  int64  `json:"createdAt"`
+		LoggedAt   int64  `json:"loggedAt"`
+	}
+	ResponseBody struct{
+		Code int
+		Success bool
+		Token string
+		Uid string
+		Valid bool
+>>>>>>> nekohandserverv1/master
 	}
 )
