@@ -4,13 +4,7 @@ import (
 	"fmt"
 	"log"
 
-<<<<<<< HEAD
 	"nekoserver/middleware/data"
-	"v3/common"
-=======
-
-	"nekoserver/middleware/data"
->>>>>>> nekohandserverv1/master
 
 	"github.com/jmoiron/sqlx"
 )
@@ -25,10 +19,6 @@ func AssignDatabaseFromList(nameList []string) {
 	if AppDatabase == nil {
 		AppDatabase = map[string]data.Database{}
 	}
-<<<<<<< HEAD
-	fmt.Println(AppDatabase)
-=======
->>>>>>> nekohandserverv1/master
 
 	for k, v := range AppDatabase {
 		for _, w := range nameList {
@@ -45,11 +35,6 @@ func AssignMySQL(name string, database data.Database) {
 	mysql, err := sqlx.Connect(database.Driver, database.Source)
 
 	if err != nil {
-<<<<<<< HEAD
-		fmt.Println(database.Source)
-		fmt.Println(err)
-=======
->>>>>>> nekohandserverv1/master
 		log.Fatal(err)
 		panic(err)
 	}
@@ -86,12 +71,8 @@ func MySqlGetDB(connection string) (*sqlx.DB, error) {
 		AssignDatabaseFromList([]string{"nekohand"})
 		conn, exists = AppDatabase[connection]
 		if !exists {
-<<<<<<< HEAD
-			err = fmt.Errorf(common.MSG_DATABASE_CONNECTION_NOT_EXISTS)
-=======
 			err = fmt.Errorf("%s", "Database Connection Not Exists")
 			//err = fmt.Errorf(common.MSG_DATABASE_CONNECTION_NOT_EXISTS)
->>>>>>> nekohandserverv1/master
 			return nil, err
 		}
 	}

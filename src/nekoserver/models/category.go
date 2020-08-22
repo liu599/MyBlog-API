@@ -1,6 +1,4 @@
 package models
-<<<<<<< HEAD
-=======
 
 import (
 	"database/sql"
@@ -137,4 +135,3 @@ func DeleteCategory(id string) data.Error {
 
 	return data.Error{}
 }
->>>>>>> nekohandserverv1/master

@@ -14,20 +14,6 @@ type (
 		Message string                 `json:"message"` // 错误信息
 		Fields  map[string]interface{} `json:"fields,omitempty"`  // 错误字段信息
 	}
-<<<<<<< HEAD
-	Post struct {
-		PID      int    `json:"pid"`
-		PTitle   string `json:"title"`
-		Slug     string `json:"slug"`
-		Category int    `json:"category"`
-		Template int    `json:"template"`
-		Status   string `json:"status"`
-		Author   int    `json:"author"`
-		Body     string `json:"body"`
-		Password string `json:"password"`
-		Created  int64  `json:"created"`
-		Modified int64  `json:"modified"`
-=======
 	NekohandFile struct {
 		FID      int      `json:"fid"`
 		FileName string   `json:"filename"`
@@ -52,7 +38,6 @@ type (
 		Plink      string `json:"plink"`
 		Comment    int    `json:"comment"`
 		Cid        string `json:"cid"`
->>>>>>> nekohandserverv1/master
 	}
 	Pager struct {
 		PageNum         int `json:"pageNum"`
@@ -60,22 +45,6 @@ type (
 		TotalNumber     int `json:"total"`
 	}
 	Comment struct {
-<<<<<<< HEAD
-		COID    int `json:"coid"`
-		PID     int `json:"pid"`
-		Created int64 `json:"created"`
-		Author  string `json:"author"`
-		Url     string `json:"url"`
-		Ip      string `json:"ip"`
-		Body    string `json:"body"`
-		Parent  int `json:"parent"`
-		Status  string `json:"status"`
-		Mail    string `json:"mail"`
-	}
-	Category struct {
-		CID   int `json:"cid"`
-		CName string `json:"cname"`
-=======
 		COID    int    `json:"comid"`
 		COMID   string `json:"commentid"`
 		PID     string `json:"pid"`
@@ -93,7 +62,6 @@ type (
 		Id    string `json:"id"`
 		CName string `json:"cname"`
 		CLink string `json:"clink"`
->>>>>>> nekohandserverv1/master
 		CInfo string `json:"cinfo"`
 	}
 	UserDetail struct {
@@ -106,13 +74,6 @@ type (
 	}
 	User struct {
 		UID      int    `json:"uid"`
-<<<<<<< HEAD
-		Name     string `json:"name"`
-		Password string `json:"password"`
-		Mail     string `json:"mail"`
-		Created  int64  `json:"created"`
-		Logged   int64  `json:"logged"`
-=======
 		USID     string `json:"usid"`
 		Name     string `json:"name"`
 		Password string `json:"password"`
@@ -126,6 +87,5 @@ type (
 		Token string
 		Uid string
 		Valid bool
->>>>>>> nekohandserverv1/master
 	}
 )

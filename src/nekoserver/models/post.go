@@ -1,6 +1,4 @@
 package models
-<<<<<<< HEAD
-=======
 
 import (
 	"database/sql"
@@ -302,4 +300,3 @@ func fetchAllPosts() (error, []data.Post) {
 	}
 	return nil, posts
 }
->>>>>>> nekohandserverv1/master

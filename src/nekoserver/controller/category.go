@@ -1,6 +1,4 @@
 package controller
-<<<<<<< HEAD
-=======
 
 import (
 	"fmt"
@@ -94,4 +92,3 @@ func CategoriesDelete(context *gin.Context) {
 	}
 
 }
->>>>>>> nekohandserverv1/master

@@ -1,12 +1,6 @@
 package test
 
 import (
-<<<<<<< HEAD
-=======
-	"bytes"
-	"encoding/base64"
-	"encoding/json"
->>>>>>> nekohandserverv1/master
 	"fmt"
 	"log"
 	"net/http"
@@ -17,31 +11,18 @@ import (
 	"testing"
 	"time"
 
-<<<<<<< HEAD
-	"nekoserver/middleware/func"
-	"nekoserver/router"
-
-	"nekoserver/middleware/data"
-
-=======
 	"golang.org/x/crypto/scrypt"
 	"nekoserver/middleware/data"
 	"nekoserver/middleware/func"
 	"nekoserver/router"
 
->>>>>>> nekohandserverv1/master
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"gopkg.in/mgo.v2/bson"
 )
 
-<<<<<<< HEAD
 
-
-func ensureTableExists(db *sqlx.DB) {
-	if _, err := db.Exec(tableCreationQuery); err != nil {
-=======
 var db *sqlx.DB
 
 var Pass_gen = "000000"
@@ -59,34 +40,23 @@ func ensureTableExists(db *sqlx.DB) {
 		log.Fatal(err)
 	}
 	if _, err := db.Exec(commentTableCreationQuery); err != nil {
->>>>>>> nekohandserverv1/master
 		log.Fatal(err)
 	}
 }
 
-<<<<<<< HEAD
-var db *sqlx.DB
-
-func TestMain(m *testing.M) {
-
-=======
 func TestMain(m *testing.M) {
 
 	os.Setenv("PASS_GEN", Pass_gen)
 
 	os.Setenv("NEKO_TOKEN", Neko_token)
 
->>>>>>> nekohandserverv1/master
 	database := data.Database{
 		Driver: "mysql",
 		MaxIdle: 2,
 		MaxOpen: 15,
 		Name: "nekohand",
-<<<<<<< HEAD
-		Source: "root:rrrrr@tcp(127.0.0.1:3306)/nekohand?charset=utf8",
-=======
+
 		Source: "root:86275198@tcp(127.0.0.1:3306)/nekohand?charset=utf8",
->>>>>>> nekohandserverv1/master
 	}
 
 	var Apps = make(map[string]data.Database)
@@ -97,19 +67,11 @@ func TestMain(m *testing.M) {
 
 	_func.AssignDatabaseFromList([]string{"nekohand"})
 
-<<<<<<< HEAD
-	dbc, err := _func.MySqlGetDB("nekohand")
-=======
 	db, err := _func.MySqlGetDB("nekohand")
->>>>>>> nekohandserverv1/master
 	if err != nil {
 		fmt.Println("Error Database Connection")
 		return
 	}
-<<<<<<< HEAD
-	db = dbc
-=======
->>>>>>> nekohandserverv1/master
 	ensureTableExists(db)
 	//ensureCategoryTableExists(db)
 	//ensureRelationshipTableExists(db)
@@ -124,27 +86,17 @@ func clearTable(db *sqlx.DB) {
 	db.Exec("DELETE FROM user")
 	db.Exec("ALTER TABLE user AUTO_INCREMENT = 1")
 }
-<<<<<<< HEAD
-const tableCreationQuery = `
-CREATE TABLE IF NOT EXISTS user
-(
-    uid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id         VARCHAR(50) UNIQUE NOT NULL,
-=======
 const userTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS user
 (
     uid        INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     userid     VARCHAR(50) UNIQUE NOT NULL,
->>>>>>> nekohandserverv1/master
 	name       VARCHAR(32)  NOT NULL,
 	password   VARCHAR(100)  NOT NULL,
 	mail       VARCHAR(200)  NOT NULL,
 	createdAt  INT(64)  NOT NULL,
 	loggedAt   INT(64) NOT NULL
 ) character set = utf8`
-<<<<<<< HEAD
-=======
 const postTableCreationQuery = `
 CREATE TABLE IF NOT EXISTS post
 (
@@ -181,25 +133,17 @@ CREATE TABLE IF NOT EXISTS comment
 	createdAt  INT(64)  NOT NULL,
 	modifiedAt INT(64) NOT NULL
 ) character set = utf8`
->>>>>>> nekohandserverv1/master
 
 // 发送请求
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
 	gin.SetMode(gin.ReleaseMode)
 	engine := gin.New()
-<<<<<<< HEAD
-	engine.Use()
-
-	// Router
-	router.AssignBackendRouter(engine)
-=======
 	//engine.Use(auth.TokenAuthMiddleware())
 
 	// Router
 	router.AssignBackendRouter(engine)
 	router.AssignFrontendRouter(engine)
->>>>>>> nekohandserverv1/master
 	engine.ServeHTTP(rr, req)
 
 	return rr
@@ -212,16 +156,9 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 }
 
 func TestEmptyTable(t *testing.T) {
-<<<<<<< HEAD
-	clearTable(db)
-	form := url.Values{}
-	form.Add("token", "0003020")
-	req, _ := http.NewRequest("GET", "/v2/backend/status", strings.NewReader(form.Encode()))
-=======
 	// clearTable(db)
 	form := url.Values{}
 	req, _ := http.NewRequest("GET", "/v2/frontend/status", strings.NewReader(form.Encode()))
->>>>>>> nekohandserverv1/master
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := executeRequest(req)
 	fmt.Println(response.Body)
@@ -231,11 +168,7 @@ func TestEmptyTable(t *testing.T) {
 	//	fmt.Println("JSON Illegal")
 	//	return
 	//}
-<<<<<<< HEAD
-	checkResponseCode(t, http.StatusOK, http.StatusOK)
-=======
 	//checkResponseCode(t, http.StatusOK, http.StatusOK)
->>>>>>> nekohandserverv1/master
 	//if body := fmt.Sprintf("%v", r.Data); body != "[]" {
 	//	t.Errorf("Expected an empty array. Got %s", body)
 	//}
@@ -253,8 +186,6 @@ func insertOneData(id string, db *sqlx.DB) {
 	if err != nil {
 		fmt.Println("Database error")
 	}
-<<<<<<< HEAD
-=======
 }
 
 func insertCategories(db *sqlx.DB) {
@@ -473,5 +404,4 @@ func TestFetchPostByTime(t *testing.T) {
 	req4.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response4 := executeRequest(req4)
 	fmt.Println(response4.Body)
->>>>>>> nekohandserverv1/master
 }

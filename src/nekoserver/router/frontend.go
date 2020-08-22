@@ -1,6 +1,4 @@
 package router
-<<<<<<< HEAD
-=======
 
 import (
 	"os"
@@ -32,4 +30,3 @@ func AssignFrontendRouter(engine *gin.Engine) {
 	routerGroup.Handle("GET", "filelist", controller.FileListFetch)
 	routerGroup.Static("/files", sysFilePath)
 }
->>>>>>> nekohandserverv1/master

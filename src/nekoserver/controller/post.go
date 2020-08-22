@@ -1,6 +1,4 @@
 package controller
-<<<<<<< HEAD
-=======
 
 import (
 	"fmt"
@@ -167,4 +165,3 @@ func PostsFetchByTime(context *gin.Context) {
 	mk["data"] = posts
 	_func.Respond(context, http.StatusOK, mk)
 }
->>>>>>> nekohandserverv1/master

@@ -1,10 +1,6 @@
 package _func
 
 import (
-<<<<<<< HEAD
-	"fmt"
-=======
->>>>>>> nekohandserverv1/master
 
 	"nekoserver/middleware/data"
 
@@ -17,10 +13,6 @@ func Respond(context *gin.Context, code int, data ...map[string]interface{}) {
 	res := gin.H{}
 
 	for _, v := range data {
-<<<<<<< HEAD
-		fmt.Println(v)
-=======
->>>>>>> nekohandserverv1/master
 		for k, m := range v {
 			switch t:=m.(type) {
 			default:
@@ -39,15 +31,6 @@ func Respond(context *gin.Context, code int, data ...map[string]interface{}) {
 
 func RespondError(context *gin.Context, code int, err data.Error) {
 
-<<<<<<< HEAD
-	data := gin.H{}
-
-	data["success"] = false
-	data["error"] = err
-	data["code"] = 1
-
-	Response(context, code, data)
-=======
 	emptyData := gin.H{}
 
 	emptyData["success"] = false
@@ -55,18 +38,11 @@ func RespondError(context *gin.Context, code int, err data.Error) {
 	emptyData["code"] = 1
 
 	Response(context, code, emptyData)
->>>>>>> nekohandserverv1/master
 
 	context.Abort()
 }
 
 // Response
 func Response(context *gin.Context, code int, data gin.H) {
-<<<<<<< HEAD
-=======
-	context.Header("Access-Control-Expose-Headers", "Access-Token, UUid, X-Real-Ip")
-	context.Header("X-Real-Ip", context.ClientIP())
-	//context.SetCookie("_nekohand_x3x", context.ClientIP(), 3600, "/", "blog.nekohand.moe", true, false)
->>>>>>> nekohandserverv1/master
 	context.JSON(code, data)
 }
